@@ -1,0 +1,6 @@
+@PayEase_CaseStudy_HostAddress = http://localhost:5068
+
+GET {{PayEase_CaseStudy_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
