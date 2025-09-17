@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using PayEase_CaseStudy.Authentication;
 
 namespace PayEase_CaseStudy.Models
 {
@@ -8,16 +10,15 @@ namespace PayEase_CaseStudy.Models
         [Key]
         public int LogId { get; set; }
 
-        [ForeignKey("User")]
-        public int UserId { get; set; }
+        // Foreign key to Identity User
+        public string ApplicationUserId { get; set; }
+
+        [ForeignKey("ApplicationUserId")]
+        public ApplicationUser User { get; set; }
 
         [Required]
         public string Action { get; set; }
 
         public DateTime Timestamp { get; set; } = DateTime.Now;
-
-        // Navigation
-        public User User { get; set; }
-
     }
 }

@@ -7,6 +7,7 @@ namespace PayEase_CaseStudy.Repository
     {
         public Task<List<PayrollDetail>> GetAllPayrollDetails();
         public Task<PayrollDetail> GetPayrollDetailById(int id);
+        public Task<List<PayrollDetail>> GetPayrollDetailsByEmployeeId(int employeeId);
         public Task<PayrollDetail> AddPayrollDetail(PayrollDetailDTO payrollDetail);
         public Task<PayrollDetail> UpdatePayrollDetail(int id, PayrollDetailDTO payrollDetail);
         public Task DeletePayrollDetail(int id);

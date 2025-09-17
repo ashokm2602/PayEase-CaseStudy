@@ -92,6 +92,7 @@ namespace PayEase_CaseStudy.Repository
                 throw new Exception($"Error updating compensation with ID {id}", ex);
             }
         }
+        
 
         public async Task DeleteCompensation(int id)
         {
@@ -106,6 +107,23 @@ namespace PayEase_CaseStudy.Repository
             catch (Exception ex)
             {
                 throw new Exception($"Error deleting compensation with ID {id}", ex);
+            }
+        }
+
+        public async Task<List<CompensationAdjustment>> GetCompensationByEmpId(int empId)
+        {
+            try
+            {
+                var emp = await _context.CompensationAdjustments.Where(p => p.EmpId == empId).ToListAsync();
+                if(emp == null)
+                {
+                    throw new Exception($"EmployeeID with ID {empId} not found");
+                }
+                return emp;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error deleting compensation with ID {empId}", ex);
             }
         }
     }

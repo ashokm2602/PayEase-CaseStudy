@@ -16,6 +16,15 @@ namespace PayEase_CaseStudy.Repository
         {
             try
             {
+                if (payroll.PayrollPeriodEnd < payroll.PayrollPeriodStart)
+                    throw new ArgumentException("Payroll period end cannot be before start date.");
+
+                if (payroll.ProcessedDate < payroll.PayrollPeriodStart)
+                    throw new ArgumentException("Processed date cannot be before payroll period start.");
+
+                if (payroll.ProcessedDate < DateTime.Today)
+                    throw new ArgumentException("Processed date cannot be before today.");
+
                 var newPayroll = new Payroll
                 {
                     PayrollPeriodStart = payroll.PayrollPeriodStart,
@@ -23,10 +32,9 @@ namespace PayEase_CaseStudy.Repository
                     ProcessedDate = payroll.ProcessedDate,
                     Status = payroll.Status
                 };
+
                 _context.Payrolls.Add(newPayroll);
                 await _context.SaveChangesAsync();
-                if(newPayroll == null)
-                    return null;
                 return newPayroll;
             }
             catch (Exception ex)
@@ -34,6 +42,38 @@ namespace PayEase_CaseStudy.Repository
                 throw new Exception("Error adding payroll", ex);
             }
         }
+
+        public async Task<Payroll> UpdatePayroll(int id, PayrollDTO payroll)
+        {
+            try
+            {
+                if (payroll.PayrollPeriodEnd < payroll.PayrollPeriodStart)
+                    throw new ArgumentException("Payroll period end cannot be before start date.");
+
+                if (payroll.ProcessedDate < payroll.PayrollPeriodStart)
+                    throw new ArgumentException("Processed date cannot be before payroll period start.");
+
+                if (payroll.ProcessedDate < DateTime.Today)
+                    throw new ArgumentException("Processed date cannot be before today.");
+
+                var existingPayroll = await _context.Payrolls.FindAsync(id);
+                if (existingPayroll == null)
+                    return null;
+
+                existingPayroll.PayrollPeriodStart = payroll.PayrollPeriodStart;
+                existingPayroll.PayrollPeriodEnd = payroll.PayrollPeriodEnd;
+                existingPayroll.ProcessedDate = payroll.ProcessedDate;
+                existingPayroll.Status = payroll.Status;
+
+                await _context.SaveChangesAsync();
+                return existingPayroll;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error updating payroll with ID {id}", ex);
+            }
+        }
+
 
         public async Task DeletePayroll(int id)
         {
@@ -81,25 +121,7 @@ namespace PayEase_CaseStudy.Repository
         }
 
 
-        public async Task<Payroll> UpdatePayroll(int id, PayrollDTO payroll)
-        {
-            try
-            {
-                var existingPayroll = await _context.Payrolls.FindAsync(id);
-                if (existingPayroll == null)
-                    return null;
-                existingPayroll.PayrollPeriodStart = payroll.PayrollPeriodStart;
-                existingPayroll.PayrollPeriodEnd = payroll.PayrollPeriodEnd;
-                existingPayroll.ProcessedDate = payroll.ProcessedDate;
-                existingPayroll.Status = payroll.Status;
-                await _context.SaveChangesAsync();
-                return existingPayroll;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error updating payroll with ID {id}", ex);
-            }
-        }
+        
 
     }
 }

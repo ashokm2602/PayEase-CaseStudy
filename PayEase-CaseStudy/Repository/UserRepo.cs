@@ -1,108 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PayEase_CaseStudy.DTOs;
-using PayEase_CaseStudy.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using PayEase_CaseStudy.Authentication;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace PayEase_CaseStudy.Repository
 {
     public class UserRepo : IUser
     {
-        private readonly PayDbContext _context;
-        public UserRepo(PayDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public UserRepo(UserManager<ApplicationUser> userManager)
         {
-            _context = context;
-        }
-        public async Task<List<User>> GetAllUsers()
-        {
-            try
-            {
-                var users = await _context.Users.Include(u => u.Role).ToListAsync();
-                return users;
-            }
-            catch (Exception ex)
-            {
-                
-                throw new Exception("Error retrieving users", ex);
-            }
+            _userManager = userManager;
         }
 
-        public async Task<User> GetUserById(int id)
+        // Get all users
+        public async Task<List<ApplicationUser>> GetAllUsers()
         {
-            try
-            {
-                var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.UserId == id);
-                if (user == null)
-                    return null;
-                return user;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving user with ID {id}", ex);
-            }
+            return await _userManager.Users.ToListAsync();
         }
 
-        public async Task<User> AddUser(UserDTO user)
+        // Get single user by ID
+        public async Task<ApplicationUser> GetUserById(string id)
         {
-            try
-            {
-                var newUser = new User
-                {
-                    Username = user.Username,
-                    Email = user.Email,
-                    PasswordHash = user.Password,
-                    RoleId = user.RoleId,
-                    CreatedAt = DateTime.Now
-
-                };
-                if (newUser == null)
-                    return null;
-                _context.Users.Add(newUser);
-                await _context.SaveChangesAsync();
-                return newUser;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error adding new user", ex);
-            }
+            return await _userManager.FindByIdAsync(id);
         }
-
-        public async Task<User> UpdateUser(int id, UserDTO user)
-        {
-            try
-            {
-                var existingUser = await _context.Users.FindAsync(id);
-                if (existingUser == null)
-                    return null;
-                existingUser.Username = user.Username;
-                existingUser.Email = user.Email;
-                existingUser.PasswordHash = user.Password;
-                existingUser.RoleId = user.RoleId;
-                _context.Users.Update(existingUser);
-                await _context.SaveChangesAsync();
-                return existingUser;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error updating user with ID {id}", ex);
-            }
-        }
-        
-        public async Task DeleteUser(int id)
-        {
-            try
-            {
-                var user = await _context.Users.FindAsync(id);
-                if (user != null)
-                {
-                    _context.Users.Remove(user);
-                    await _context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error deleting user with ID {id}", ex);
-            }
-        }
-
-        
     }
 }

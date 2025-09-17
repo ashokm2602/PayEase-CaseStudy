@@ -18,7 +18,6 @@ namespace PayEase_CaseStudy.Repository
             {
                 var newEmp = new Employee
                 {
-                    UserId = emp.UserId,
                     FirstName = emp.FirstName,
                     LastName = emp.LastName,
                     DOB = emp.DOB,

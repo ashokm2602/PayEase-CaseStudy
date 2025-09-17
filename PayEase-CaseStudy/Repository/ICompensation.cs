@@ -7,6 +7,7 @@ namespace PayEase_CaseStudy.Repository
     {
         public Task<List<CompensationAdjustment>> GetAllCompensations();
         public Task<CompensationAdjustment> GetCompensationById(int id);
+        public Task<List<CompensationAdjustment>> GetCompensationByEmpId(int empId);
         public Task<CompensationAdjustment> AddCompensation(CompensationDTO compensation);
         public Task<CompensationAdjustment> UpdateCompensation(int id, CompensationDTO compensation);
         public Task DeleteCompensation(int id);

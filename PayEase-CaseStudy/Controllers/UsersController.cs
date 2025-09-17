@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using PayEase_CaseStudy.Authentication;
 using PayEase_CaseStudy.DTOs;
-using PayEase_CaseStudy.Models;
-using PayEase_CaseStudy.Repository;
 
 namespace PayEase_CaseStudy.Controllers
 {
@@ -15,101 +9,56 @@ namespace PayEase_CaseStudy.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IUser _user;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UsersController(IUser user)
+        public UsersController(UserManager<ApplicationUser> userManager)
         {
-            _user = user;
+            _userManager = userManager;
         }
 
-        // GET: api/Users
-        [HttpGet("GetAllUsers")]
-        public async Task<ActionResult> GetAllUsers()
+        // GET: api/Users/getallusers
+        [HttpGet("getallusers")]
+        public async Task<IActionResult> GetAllUsers()
         {
-            try
-            {
-                var users = await _user.GetAllUsers();
-                if(users == null)
-                    return NotFound("No users found.");
-                return Ok(users);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+            var identityUsers = _userManager.Users.ToList();
+            var usersWithRoles = new List<UserWithRolesDTO>();
 
-        // GET: api/Users/5
-        [HttpGet("GetUserById{id}")]
-        public async Task<ActionResult> GetUserById(int id)
-        {
-            try
+            foreach (var identityUser in identityUsers)
             {
-                var user = await _user.GetUserById(id);
-                if (user == null)
+                var roles = await _userManager.GetRolesAsync(identityUser);
+
+                usersWithRoles.Add(new UserWithRolesDTO
                 {
-                    return NotFound();
-                }
-                return Ok(user);
+                    UserId = identityUser.Id,
+                    Username = identityUser.UserName,
+                    Email = identityUser.Email,
+                    Roles = roles.ToList()
+                });
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+
+            return Ok(usersWithRoles);
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("UpdateUser{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UserDTO user)
+        // GET: api/Users/getuser/{id}
+        [HttpGet("getuser/{id}")]
+        public async Task<IActionResult> GetUserById(string id)
         {
-            try
+            var identityUser = await _userManager.FindByIdAsync(id);
+            if (identityUser == null) return NotFound();
+
+            var roles = await _userManager.GetRolesAsync(identityUser);
+
+            var userWithRoles = new UserWithRolesDTO
             {
-                var updateduser = await _user.UpdateUser(id, user);
-                if (updateduser == null)
-                    return NotFound();
-                return Ok(updateduser);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+                UserId = identityUser.Id,
+                Username = identityUser.UserName,
+                Email = identityUser.Email,
+                Roles = roles.ToList()
+            };
+
+            return Ok(userWithRoles);
         }
 
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult> AddUser(UserDTO user)
-        {
-            try
-            {
-                var newuser = await _user.AddUser(user);
-                if (newuser == null)
-                    return BadRequest("Could not create user");
-                return CreatedAtAction("GetUserById", new { id = newuser.UserId }, newuser);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-
-        // DELETE: api/Users/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
-        {
-            try
-            {
-                await _user.DeleteUser(id);
-                return NoContent();
-            }
-            catch(Exception e)
-            {
-                throw new Exception($"Error deleting user with ID {id}", e);
-            }
-
-        }
-
-        
+       
     }
 }

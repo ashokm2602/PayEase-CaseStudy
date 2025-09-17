@@ -22,11 +22,7 @@ namespace PayEase_CaseStudy.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         // Foreign Key to Role
-        [ForeignKey("Role")]
-        public int RoleId { get; set; }
-
-        public Role Role { get; set; }
-
+       
         // Navigation
         [JsonIgnore]
         public Employee Employee { get; set; }

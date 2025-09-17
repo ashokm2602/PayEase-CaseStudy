@@ -40,7 +40,23 @@ namespace PayEase_CaseStudy.Controllers
                 throw new Exception("Error retrieving payroll details", e);
             }
         }
-
+        [HttpGet("GetPayrollDetailsByEmployeeId{employeeId}")]
+        public async Task<ActionResult<List<PayrollDetail>>> GetPayrollDetailsByEmployeeId(int employeeId)
+        {
+            try
+            {
+                var list = await _payrollDetail.GetPayrollDetailsByEmployeeId(employeeId);
+                if (list == null || list.Count == 0)
+                {
+                    return NotFound($"No payroll details found for employee ID {employeeId}.");
+                }
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error retrieving payroll details for employee ID {employeeId}", e);
+            }
+        }
         // GET: api/PayrollDetails/5
         [HttpGet("GetPayrollDetailById{id}")]
         public async Task<ActionResult<PayrollDetail>> GetPayrollDetailById(int id)

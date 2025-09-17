@@ -60,6 +60,8 @@ namespace PayEase_CaseStudy.Repository
         }
 
 
+
+
         public async Task<PayrollDetail?> GetPayrollDetailById(int id)
         {
             try
@@ -88,7 +90,7 @@ namespace PayEase_CaseStudy.Repository
                 {
                     throw new Exception("No payroll details found.");
                 }
-                
+
                 return payrollDetails;
             }
             catch (Exception ex)
@@ -97,11 +99,11 @@ namespace PayEase_CaseStudy.Repository
                 throw new Exception("An error occurred while retrieving payroll details.", ex);
             }
         }
-        public async Task<PayrollDetail> UpdatePayrollDetail(int id,PayrollDetailDTO payrollDetail)
+        public async Task<PayrollDetail> UpdatePayrollDetail(int id, PayrollDetailDTO payrollDetail)
         {
             try
             {
-                if(payrollDetail == null)
+                if (payrollDetail == null)
                     throw new ArgumentNullException(nameof(payrollDetail), "PayrollDetail cannot be null");
                 var existingPayrollDetail = await _context.PayrollDetails.FindAsync(id);
                 if (existingPayrollDetail == null)
@@ -112,12 +114,12 @@ namespace PayEase_CaseStudy.Repository
                 existingPayrollDetail.EmpId = payrollDetail.EmpId;
 
                 var emp = await _context.Employees.FindAsync(payrollDetail.EmpId);
-                if(emp == null)
+                if (emp == null)
                 {
                     throw new KeyNotFoundException("EmployeeId is not found.");
                 }
                 existingPayrollDetail.BasicSalary = emp.BaseSalary;
-                
+
                 _context.PayrollDetails.Update(existingPayrollDetail);
                 await CalculateNetSalary(existingPayrollDetail.PayrollDetailId);
                 _context.PayrollDetails.Update(existingPayrollDetail);
@@ -143,7 +145,7 @@ namespace PayEase_CaseStudy.Repository
                 _context.PayrollDetails.Remove(payrollDetail);
                 await _context.SaveChangesAsync();
 
-             
+
 
             }
             catch (Exception ex)
@@ -186,6 +188,42 @@ namespace PayEase_CaseStudy.Repository
             }
         }
 
+        Task<List<PayrollDetail>> GetPayrollDetailsByEmployeeId(int employeeId)
+        {
+            try
+            {
+                var payrollDetails = _context.PayrollDetails.Where(p => p.EmpId == employeeId).ToListAsync();
+                if (payrollDetails == null || !payrollDetails.Result.Any())
+                {
+                    throw new KeyNotFoundException($"No PayrollDetails found for Employee ID {employeeId}.");
+                }
+                return payrollDetails;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (you can use a logging framework here)
+                throw new Exception("An error occurred while retrieving payroll details for the employee.", ex);
+            }
+        }
 
+        Task<List<PayrollDetail>> IPayrollDetail.GetPayrollDetailsByEmployeeId(int employeeId)
+        {
+            try
+            {
+                var payrollDetails = _context.PayrollDetails.Where(p => p.EmpId == employeeId).ToListAsync();
+
+                if (payrollDetails == null || !payrollDetails.Result.Any())
+                {
+                    throw new KeyNotFoundException($"No PayrollDetails found for Employee ID {employeeId}.");
+                }
+
+                return payrollDetails;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (you can use a logging framework here)
+                throw new Exception("An error occurred while retrieving payroll details for the employee.", ex);
+            }
+        }
     }
 }

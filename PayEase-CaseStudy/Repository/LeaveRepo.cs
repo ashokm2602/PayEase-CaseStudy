@@ -54,13 +54,19 @@ namespace PayEase_CaseStudy.Repository
             {
                 if (leave == null)
                     throw new ArgumentNullException(nameof(leave), "Leave cannot be null");
+
+                if (leave.StartDate < DateTime.Today || leave.EndDate < DateTime.Today)
+                    throw new ArgumentException("Leave start and end dates cannot be before today.");
+
                 var lev = new Leave
                 {
                     EmpId = leave.EmpId,
                     LeaveType = leave.LeaveType,
                     StartDate = leave.StartDate,
                     EndDate = leave.EndDate,
+                    Status = leave.Status
                 };
+
                 _context.Leaves.Add(lev);
                 await _context.SaveChangesAsync();
                 return lev;
@@ -77,16 +83,20 @@ namespace PayEase_CaseStudy.Repository
             {
                 if (leave == null)
                     throw new ArgumentNullException(nameof(leave), "Leave cannot be null");
+
+                if (leave.StartDate < DateTime.Today || leave.EndDate < DateTime.Today)
+                    throw new ArgumentException("Leave start and end dates cannot be before today.");
+
                 var existingLeave = await _context.Leaves.FindAsync(id);
                 if (existingLeave == null)
-                {
                     throw new KeyNotFoundException($"Leave with ID {id} not found.");
-                }
+
                 existingLeave.EmpId = leave.EmpId;
                 existingLeave.LeaveType = leave.LeaveType;
                 existingLeave.StartDate = leave.StartDate;
                 existingLeave.EndDate = leave.EndDate;
                 existingLeave.Status = leave.Status;
+
                 _context.Leaves.Update(existingLeave);
                 await _context.SaveChangesAsync();
                 return existingLeave;
@@ -96,6 +106,9 @@ namespace PayEase_CaseStudy.Repository
                 throw new Exception($"Error updating leave with ID {id}", ex);
             }
         }
+
+
+
 
         public async Task DeleteLeave(int id)
         {

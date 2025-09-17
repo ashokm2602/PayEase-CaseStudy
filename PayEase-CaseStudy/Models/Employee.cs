@@ -1,5 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using PayEase_CaseStudy.Authentication;
 
 namespace PayEase_CaseStudy.Models
 {
@@ -8,8 +11,11 @@ namespace PayEase_CaseStudy.Models
         [Key]
         public int EmpId { get; set; }
 
-        [ForeignKey("User")]
-        public int UserId { get; set; }
+        // Foreign key to Identity User
+        public string ApplicationUserId { get; set; }
+
+        [ForeignKey("ApplicationUserId")]
+        public ApplicationUser User { get; set; }
 
         [Required, MaxLength(100)]
         public string FirstName { get; set; }
@@ -28,15 +34,14 @@ namespace PayEase_CaseStudy.Models
 
         [MaxLength(255)]
         public string Address { get; set; }
+
         [Column(TypeName = "decimal(18,2)")]
         public decimal BaseSalary { get; set; }
 
         // Navigation
-        public User User { get; set; }
         public Department Department { get; set; }
         public ICollection<Leave> Leaves { get; set; }
         public ICollection<PayrollDetail> PayrollDetails { get; set; }
         public ICollection<CompensationAdjustment> CompensationAdjustments { get; set; }
-
     }
 }

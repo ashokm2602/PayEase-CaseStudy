@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace PayEase_CaseStudy.Migrations
+namespace PayEase_CaseStudy.Migrations.ApplicationDb
 {
     /// <inheritdoc />
-    public partial class CreatingTables : Migration
+    public partial class InitialIdentityMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
