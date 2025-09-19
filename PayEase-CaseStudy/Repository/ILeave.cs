@@ -8,7 +8,7 @@ namespace PayEase_CaseStudy.Repository
         public Task<List<Leave>> GetAllLeaves();
         public Task<Leave> GetLeaveById(int id);
         public Task<Leave> AddLeave(LeaveDTO leave);
-        public Task<Leave> UpdateLeave(int id, LeaveDTO leave);
+        public Task<Leave> UpdateLeave(int id, string leave);
         public Task DeleteLeave(int id);
     }
 }

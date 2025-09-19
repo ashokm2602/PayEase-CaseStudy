@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,8 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/PayrollDetails
         [HttpGet("GetAllPayrollDetails")]
+        [Authorize(Roles = "Payroll Processor,Manager")]
+
         public async Task<ActionResult<List<PayrollDetail>>> GetAllPayrollDetails()
         {
             try
@@ -41,6 +44,7 @@ namespace PayEase_CaseStudy.Controllers
             }
         }
         [HttpGet("GetPayrollDetailsByEmployeeId{employeeId}")]
+        [Authorize(Roles = "Employee")]
         public async Task<ActionResult<List<PayrollDetail>>> GetPayrollDetailsByEmployeeId(int employeeId)
         {
             try
@@ -78,27 +82,12 @@ namespace PayEase_CaseStudy.Controllers
 
         // PUT: api/PayrollDetails/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("UpdatePayrollDetail{id}")]
-        public async Task<IActionResult> UpdatePayrollDetail(int id, PayrollDetailDTO payrollDetail)
-        {
-            try
-            {
-                var updatedPayrollDetail = await _payrollDetail.UpdatePayrollDetail(id, payrollDetail);
-                if (updatedPayrollDetail == null)
-                {
-                    return NotFound($"Payroll detail with ID {id} not found.");
-                }
-                return Ok(updatedPayrollDetail);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Error updating payroll detail with ID {id}", e);
-            }
-        }
+       
 
         // POST: api/PayrollDetails
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddPayrollDetail")]
+        [Authorize(Roles = "Payroll Processor")]
         public async Task<ActionResult<PayrollDetail>> AddPayrollDetail(PayrollDetailDTO payrollDetail)
         {
             try
@@ -118,6 +107,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // DELETE: api/PayrollDetails/5
         [HttpDelete("DeletePayrollDetail{id}")]
+        [Authorize(Roles = "Payroll Processor")]
         public async Task<IActionResult> DeletePayrollDetail(int id)
         {
             try

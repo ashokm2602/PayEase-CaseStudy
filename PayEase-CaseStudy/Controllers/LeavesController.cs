@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/Leaves
         [HttpGet("GetAllLeaves")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<IList<Leave>>> GetLeaves()
         {
             try
@@ -43,6 +45,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/Leaves/5
         [HttpGet("GetLeaveById{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<Leave>> GetLeave(int id)
         {
             try
@@ -63,7 +66,8 @@ namespace PayEase_CaseStudy.Controllers
         // PUT: api/Leaves/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("UpdateLeave{id}")]
-        public async Task<IActionResult> UpdateLeave(int id, LeaveDTO leave)
+        [Authorize(Roles = "Manager")]
+        public async Task<IActionResult> UpdateLeave(int id, string leave)
         {
             try
             {
@@ -83,6 +87,7 @@ namespace PayEase_CaseStudy.Controllers
         // POST: api/Leaves
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddLeave")]
+        [Authorize(Roles = "Employee")]
         public async Task<ActionResult<Leave>> PostLeave(LeaveDTO leave)
         {
             try
@@ -104,6 +109,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // DELETE: api/Leaves/5
         [HttpDelete("DeleteLeave{id}")]
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> DeleteLeave(int id)
         {
             try

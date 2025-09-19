@@ -64,7 +64,7 @@ namespace PayEase_CaseStudy.Repository
                     LeaveType = leave.LeaveType,
                     StartDate = leave.StartDate,
                     EndDate = leave.EndDate,
-                    Status = leave.Status
+                    Status = "Pending"
                 };
 
                 _context.Leaves.Add(lev);
@@ -77,25 +77,21 @@ namespace PayEase_CaseStudy.Repository
             }
         }
 
-        public async Task<Leave> UpdateLeave(int id, LeaveDTO leave)
+        public async Task<Leave> UpdateLeave(int id, string leave)
         {
             try
             {
                 if (leave == null)
                     throw new ArgumentNullException(nameof(leave), "Leave cannot be null");
 
-                if (leave.StartDate < DateTime.Today || leave.EndDate < DateTime.Today)
-                    throw new ArgumentException("Leave start and end dates cannot be before today.");
+                
 
                 var existingLeave = await _context.Leaves.FindAsync(id);
                 if (existingLeave == null)
                     throw new KeyNotFoundException($"Leave with ID {id} not found.");
 
-                existingLeave.EmpId = leave.EmpId;
-                existingLeave.LeaveType = leave.LeaveType;
-                existingLeave.StartDate = leave.StartDate;
-                existingLeave.EndDate = leave.EndDate;
-                existingLeave.Status = leave.Status;
+               
+                existingLeave.Status = leave;
 
                 _context.Leaves.Update(existingLeave);
                 await _context.SaveChangesAsync();

@@ -1,3 +1,4 @@
+﻿using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +12,7 @@ using PayEase_CaseStudy.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// -------------------- CONNECTION STRINGS --------------------
+// -------------------- CONNECTION STRING --------------------
 var connectionString = builder.Configuration.GetConnectionString("defaultconnection");
 
 // -------------------- DBCONTEXTS --------------------
@@ -22,8 +23,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // App DbContext
 builder.Services.AddDbContext<PayDbContext>(options =>
     options.UseSqlServer(connectionString));
-
-
 
 // -------------------- IDENTITY --------------------
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -52,36 +51,36 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
+// -------------------- SWAGGER --------------------
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "PayEase API", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
-        Description = "please Enter Token",
+        Description = "Please enter token",
         Name = "Authorization",
         Type = SecuritySchemeType.Http,
         BearerFormat = "JWT",
         Scheme = "bearer"
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
         {
+            new OpenApiSecurityScheme
             {
-                new OpenApiSecurityScheme
+                Reference = new OpenApiReference
                 {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                },
-                new string[] { }
-            }
-        });
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
-// -------------------- REPOSITORIES --------------------
+// -------------------- REPOSITORIES & SERVICES --------------------
 builder.Services.AddScoped<IUser, UserRepo>();
 builder.Services.AddScoped<IEmployee, EmployeeRepo>();
 builder.Services.AddScoped<IDepartment, DepartmentRepo>();
@@ -93,18 +92,32 @@ builder.Services.AddScoped<ILeave, LeaveRepo>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-
-builder.Services.AddDbContext<PayDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("defaultconnection")));
-
-
-
-// -------------------- CONTROLLERS & SWAGGER --------------------
+// -------------------- CONTROLLERS --------------------
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// -------------------- SEED DEFAULT USER --------------------
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+    // Check if the user exists
+    var existingUser = await userManager.FindByNameAsync("testuser");
+    if (existingUser == null)
+    {
+        var user = new ApplicationUser
+        {
+            UserName = "testuser",
+            Email = "test@mail.com"
+        };
+
+        // Create the user with a proper password
+        await userManager.CreateAsync(user, "Test@123"); // password will be hashed
+    }
+}
+
 
 // -------------------- MIDDLEWARE --------------------
 if (app.Environment.IsDevelopment())
@@ -114,11 +127,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// Order matters: Authentication BEFORE Authorization
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

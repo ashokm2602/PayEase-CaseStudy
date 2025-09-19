@@ -30,7 +30,7 @@ namespace PayEase_CaseStudy.Tests
             // Reuse the FakeCurrentUserService from AuditLogs test
             var fakeUserService = new FakeCurrentUserService("TestUser");
 
-            _context = new PayDbContext(options, fakeUserService);
+            _context = new PayDbContext(options);
             _context.Database.EnsureCreated();
 
             // Seed some compensations

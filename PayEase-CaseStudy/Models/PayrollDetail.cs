@@ -11,7 +11,7 @@ namespace PayEase_CaseStudy.Models
 
         [ForeignKey("Payroll")]
         public int PayrollId { get; set; }
-        
+        [JsonIgnore]
         public Payroll Payroll { get; set; }
 
         [ForeignKey("Employee")]

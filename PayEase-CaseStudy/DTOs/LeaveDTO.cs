@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using PayEase_CaseStudy.Models;
 
 namespace PayEase_CaseStudy.DTOs
@@ -18,6 +19,7 @@ namespace PayEase_CaseStudy.DTOs
         public DateTime EndDate { get; set; }
 
         [Required, MaxLength(20)]
-        public string Status { get; set; }
+        
+        public string Status { get; set; } = "Pending";
     }
 }

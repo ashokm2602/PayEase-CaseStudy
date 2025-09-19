@@ -1,20 +1,20 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using PayEase_CaseStudy.Authentication;
+﻿using Microsoft.EntityFrameworkCore;
 using PayEase_CaseStudy.Services;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PayEase_CaseStudy.Models
 {
-    public class PayDbContext : IdentityDbContext<ApplicationUser>
+    public class PayDbContext : DbContext
     {
-        private readonly ICurrentUserService _currentUserService;
 
-        public PayDbContext(DbContextOptions<PayDbContext> options, ICurrentUserService currentUserService)
+        public PayDbContext(DbContextOptions<PayDbContext> options)
             : base(options)
         {
-            _currentUserService = currentUserService;
         }
+
+        
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }
@@ -23,36 +23,8 @@ namespace PayEase_CaseStudy.Models
         public DbSet<Leave> Leaves { get; set; }
         public DbSet<CompensationAdjustment> CompensationAdjustments { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            await AddAuditLogs();
-            return await base.SaveChangesAsync(cancellationToken);
-        }
 
-        private async Task AddAuditLogs()
-        {
-            var userId = _currentUserService.GetUserId() ?? "SYSTEM";
-
-            var entries = ChangeTracker.Entries()
-                .Where(e => e.Entity is not AuditLog &&
-                            (e.State == EntityState.Added ||
-                             e.State == EntityState.Modified ||
-                             e.State == EntityState.Deleted));
-
-            foreach (var entry in entries)
-            {
-                var audit = new AuditLog
-                {
-                    Action = entry.State.ToString(), // Added, Modified, Deleted
-                    Timestamp = DateTime.UtcNow,
-                    ApplicationUserId = userId
-                };
-
-                await AuditLogs.AddAsync(audit);
-            }
-        }
-
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

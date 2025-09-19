@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/Departments
         [HttpGet("GetAllDepartments")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IList<Department>>> GetAllDepartments()
         {
             try
@@ -42,6 +44,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/Departments/5
         [HttpGet("GetDepartmentById{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Department>> GetDepartmentById(int id)
         {
             try
@@ -69,6 +72,7 @@ namespace PayEase_CaseStudy.Controllers
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Department>> AddDepartment(string departmentname)
         {
             try
@@ -86,6 +90,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // DELETE: api/Departments/5
         [HttpDelete("DeleteDepartment{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
             try

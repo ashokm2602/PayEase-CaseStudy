@@ -1,12 +1,13 @@
-﻿using NUnit.Framework;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
+﻿using System;
 using System.Collections.Generic;
-using PayEase_CaseStudy.Models;
-using PayEase_CaseStudy.DTOs;
-using PayEase_CaseStudy.Repository;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 using PayEase_CaseStudy.Authentication;
+using PayEase_CaseStudy.DTOs;
+using PayEase_CaseStudy.Models;
+using PayEase_CaseStudy.Repository;
+using PayEase_CaseStudy.Services;
 
 namespace PayEase_CaseStudy.Tests
 {
@@ -15,6 +16,7 @@ namespace PayEase_CaseStudy.Tests
     {
         private PayDbContext _context;
         private EmployeeRepo _employeeRepo;
+        private readonly ICurrentUserService _currentUserService;
 
         [SetUp]
         public void Setup()
@@ -24,15 +26,17 @@ namespace PayEase_CaseStudy.Tests
                 .Options;
             var fakeUserService = new FakeCurrentUserService("TestUser");
 
-            _context = new PayDbContext(options, fakeUserService);
+            _context = new PayDbContext(options);
+             
 
-            _context.Database.EnsureCreated();
+
+        _context.Database.EnsureCreated();
 
             _context.Add(new ApplicationUser {UserName = "admin", Email = "admin@mail.com", PasswordHash = "pass" });
             _context.Departments.Add(new Department { DeptId = 1, DeptName = "HR" });
             _context.SaveChanges();
 
-            _employeeRepo = new EmployeeRepo(_context);
+            _employeeRepo = new EmployeeRepo(_context, _currentUserService);
         }
 
         [TearDown]
@@ -47,7 +51,7 @@ namespace PayEase_CaseStudy.Tests
         {
             var dto = new EmployeeDTO
             {
-                UserId = 1,
+                UserId = " ",
                 FirstName = "John",
                 LastName = "Doe",
                 DOB = new DateTime(1990, 1, 1),
@@ -55,7 +59,6 @@ namespace PayEase_CaseStudy.Tests
                 DeptId = 1,
                 ContactNumber = "1234567890",
                 Address = "123 Main St",
-                BaseSalary = 50000
             };
 
             var result = await _employeeRepo.AddEmployee(dto);
@@ -68,8 +71,8 @@ namespace PayEase_CaseStudy.Tests
         [Test]
         public async Task GetAllEmployees_Should_Return_All_Employees()
         {
-            await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = 1, FirstName = "Alice", LastName = "Smith", DOB = DateTime.Today.AddYears(-30), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "111111", Address = "Addr1", BaseSalary = 40000 });
-            await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = 1, FirstName = "Bob", LastName = "Brown", DOB = DateTime.Today.AddYears(-25), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "222222", Address = "Addr2", BaseSalary = 45000 });
+            await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = " ", FirstName = "Alice", LastName = "Smith", DOB = DateTime.Today.AddYears(-30), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "111111", Address = "Addr1" });
+            await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = " ", FirstName = "Bob", LastName = "Brown", DOB = DateTime.Today.AddYears(-25), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "222222", Address = "Addr2" });
 
             var employees = await _employeeRepo.GetAllEmployees();
 
@@ -80,7 +83,7 @@ namespace PayEase_CaseStudy.Tests
         [Test]
         public async Task GetEmployeeById_Should_Return_Correct_Employee()
         {
-            var emp = await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = 1, FirstName = "Charlie", LastName = "Green", DOB = DateTime.Today.AddYears(-28), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "333333", Address = "Addr3", BaseSalary = 48000 });
+            var emp = await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = " ", FirstName = "Charlie", LastName = "Green", DOB = DateTime.Today.AddYears(-28), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "333333", Address = "Addr3" });
 
             var result = await _employeeRepo.GetEmployeeById(emp.EmpId);
 
@@ -91,9 +94,8 @@ namespace PayEase_CaseStudy.Tests
         [Test]
         public async Task UpdateEmployee_Should_Update_Employee_Details()
         {
-            var emp = await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = 1, FirstName = "David", LastName = "White", DOB = DateTime.Today.AddYears(-32), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "444444", Address = "Addr4", BaseSalary = 52000 });
-
-            var updated = await _employeeRepo.UpdateEmployee(emp.EmpId, new EmployeeDTO { UserId = 1, FirstName = "DavidUpdated", LastName = "White", DOB = emp.DOB, HireDate = emp.HireDate, DeptId = 1, ContactNumber = "555555", Address = "New Addr", BaseSalary = 55000 });
+            var emp = await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = " ", FirstName = "David", LastName = "White", DOB = DateTime.Today.AddYears(-32), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "444444", Address = "Addr4" });
+            var updated = await _employeeRepo.UpdateEmployee(emp.EmpId, new EmployeeUpdateDTO { FirstName = "DavidUpdated", LastName = "White", DOB = emp.DOB, ContactNumber = "555555", Address = "New Addr"});
 
             Assert.That(updated.FirstName, Is.EqualTo("DavidUpdated"));
             Assert.That(updated.BaseSalary, Is.EqualTo(55000));
@@ -102,7 +104,7 @@ namespace PayEase_CaseStudy.Tests
         [Test]
         public async Task DeleteEmployee_Should_Remove_Employee_From_Db()
         {
-            var emp = await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = 1, FirstName = "Eve", LastName = "Black", DOB = DateTime.Today.AddYears(-29), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "666666", Address = "Addr5", BaseSalary = 47000 });
+            var emp = await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = " ", FirstName = "Eve", LastName = "Black", DOB = DateTime.Today.AddYears(-29), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "666666", Address = "Addr5"});
 
             await _employeeRepo.DeleteEmployee(emp.EmpId);
 

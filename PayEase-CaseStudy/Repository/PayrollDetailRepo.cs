@@ -1,4 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using PayEase_CaseStudy.DTOs;
@@ -25,7 +27,6 @@ namespace PayEase_CaseStudy.Repository
                 {
                     PayrollId = payrollDetail.PayrollId,
                     EmpId = payrollDetail.EmpId,
-                    BasicSalary = payrollDetail.BasicSalary,
                 };
 
                 // Find employee
@@ -36,7 +37,6 @@ namespace PayEase_CaseStudy.Repository
                 }
 
                 // ✅ Assign PayrollDetail.BasicSalary → Employee.BaseSalary
-                emp.BaseSalary = payrollDetail.BasicSalary;
                 _context.Employees.Update(emp);
 
                 // Save first so EF generates PayrollDetailId
@@ -187,8 +187,26 @@ namespace PayEase_CaseStudy.Repository
                 throw new Exception("An error occurred while calculating the net salary.", ex);
             }
         }
+        [HttpPut("updateBaseSalaryByEmpId{id}")]
+        [Authorize(Roles = "Payroll Processor")]
+        public async Task<PayrollDetail> UpdateBaseSalaryByEmpId(int id,decimal sal)
+        {
+            try
+            {
+                var pay = await _context.PayrollDetails.Where(p => p.EmpId == id).FirstOrDefaultAsync();
+                
+                if (pay == null)
+                    throw new KeyNotFoundException($"No PayrollDetails found for Employee ID {id}.");
+                pay.BasicSalary = sal;
+                return pay;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving payroll details for the employee.", ex);
+            }
 
-        Task<List<PayrollDetail>> GetPayrollDetailsByEmployeeId(int employeeId)
+        }
+        public async Task<List<PayrollDetail>> GetPayrollDetailsByEmployeeId(int employeeId)
         {
             try
             {
@@ -197,7 +215,7 @@ namespace PayEase_CaseStudy.Repository
                 {
                     throw new KeyNotFoundException($"No PayrollDetails found for Employee ID {employeeId}.");
                 }
-                return payrollDetails;
+                return await payrollDetails;
             }
             catch (Exception ex)
             {

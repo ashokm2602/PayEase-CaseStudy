@@ -24,7 +24,7 @@ namespace PayEase_CaseStudy.Tests
 
             var fakeUserService = new FakeCurrentUserService("TestUser");
 
-            _context = new PayDbContext(options, fakeUserService); _context.Database.EnsureCreated();
+            _context = new PayDbContext(options); _context.Database.EnsureCreated();
 
             _payrollRepo = new PayrollRepo(_context);
         }

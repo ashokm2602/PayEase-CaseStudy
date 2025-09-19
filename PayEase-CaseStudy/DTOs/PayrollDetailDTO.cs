@@ -10,9 +10,7 @@ namespace PayEase_CaseStudy.DTOs
         public int PayrollId { get; set; }
         [Required]
         public int EmpId { get; set; }
-        [Required]
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal BasicSalary { get; set; }
+        
         
     }
 }

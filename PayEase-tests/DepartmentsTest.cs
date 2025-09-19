@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using PayEase_CaseStudy.Models;
 using PayEase_CaseStudy.Repository;
+using PayEase_CaseStudy.Services;
 
 namespace PayEase_CaseStudy.Tests
 {
@@ -13,6 +14,8 @@ namespace PayEase_CaseStudy.Tests
     {
         private PayDbContext _context;
         private DepartmentRepo _departmentRepo;
+        private readonly ICurrentUserService currentUserService;
+        private readonly IAuditLog auditLogRepo;
 
         [SetUp]
         public void Setup()
@@ -22,10 +25,10 @@ namespace PayEase_CaseStudy.Tests
                 .Options;
             var fakeUserService = new FakeCurrentUserService("TestUser");
 
-            _context = new PayDbContext(options, fakeUserService);
+            _context = new PayDbContext(options);
             _context.Database.EnsureCreated();
 
-            _departmentRepo = new DepartmentRepo(_context);
+            _departmentRepo = new DepartmentRepo(_context,currentUserService,auditLogRepo);
         }
 
         [TearDown]

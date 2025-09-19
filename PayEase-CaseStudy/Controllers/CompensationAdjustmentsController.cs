@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/CompensationAdjustments
         [HttpGet("GetAllCompensationAdjustments")]
+        [Authorize(Roles = "Payroll Processor")]
         public async Task<ActionResult<IEnumerable<CompensationAdjustment>>> GetCompensations()
         {
             try
@@ -43,6 +45,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/CompensationAdjustments/5
         [HttpGet("GetCompensationById{id}")]
+        [Authorize(Roles = "Payroll Processor")]
         public async Task<ActionResult<CompensationAdjustment>> GetCompensationById(int id)
         {
             try
@@ -59,11 +62,29 @@ namespace PayEase_CaseStudy.Controllers
                 throw new Exception($"Error retrieving compensation adjustment with ID {id}", e);
             }
         }
-        
+        [HttpGet("GetCompensationByEmpId{id}")]
+        [Authorize(Roles = "Employee")]
+        public async Task<ActionResult<IEnumerable<CompensationAdjustment>>> GetCompensationByEmpId(int id)
+        {
+            try
+            {
+                var list = await _comp.GetCompensationByEmpId(id);
+                if (list == null || list.Count == 0)
+                {
+                    return NotFound($"No compensation adjustments found for employee ID {id}.");
+                }
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error retrieving compensation adjustments for employee ID {id}", e);
+            }
+        }
 
         // PUT: api/CompensationAdjustments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("UpdateCompensation{id}")]
+        [Authorize(Roles = "Payroll Processor")]
         public async Task<IActionResult> UpdateCompensation(int id, CompensationDTO compensationAdjustment)
         {
             try
@@ -85,6 +106,7 @@ namespace PayEase_CaseStudy.Controllers
         // POST: api/CompensationAdjustments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddCompensation")]
+        [Authorize(Roles = "Payroll Processor")]
         public async Task<ActionResult<CompensationAdjustment>> AddCompensation(CompensationDTO compensationAdjustment)
         {
             try
@@ -105,6 +127,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // DELETE: api/CompensationAdjustments/5
         [HttpDelete("DeleteCompensation{id}")]
+        [Authorize(Roles = "Payroll Processor")]
         public async Task<IActionResult> DeleteCompensationAdjustment(int id)
         {
             try

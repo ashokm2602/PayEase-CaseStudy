@@ -21,7 +21,7 @@ namespace PayEase_CaseStudy.Tests
 
             var fakeUserService = new FakeCurrentUserService("TestUser");
 
-            _context = new PayDbContext(options, fakeUserService); _context.Database.EnsureCreated();
+            _context = new PayDbContext(options); _context.Database.EnsureCreated();
 
             // Seed some leaves
             _context.Leaves.AddRange(new List<Leave>
@@ -89,21 +89,13 @@ namespace PayEase_CaseStudy.Tests
         }
 
         [Test]
-        public async Task UpdateLeave_Should_Update_Existing_Leave()
+        public async Task UpdateLeave_Should_Update_Leave_Status()
         {
-            var dto = new LeaveDTO
-            {
-                EmpId = 1,
-                LeaveType = "Sick Updated",
-                StartDate = DateTime.Now.AddDays(-4),
-                EndDate = DateTime.Now.AddDays(-1),
-                Status = "Approved"
-            };
+            var result = await _repo.UpdateLeave(1, "Approved");
 
-            var result = await _repo.UpdateLeave(1, dto);
-
-            Assert.That(result.LeaveType, Is.EqualTo("Sick Updated"));
+            Assert.That(result.Status, Is.EqualTo("Approved"));
         }
+
 
         [Test]
         public async Task DeleteLeave_Should_Remove_Leave()

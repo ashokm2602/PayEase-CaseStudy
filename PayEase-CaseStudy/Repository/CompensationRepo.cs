@@ -78,7 +78,6 @@ namespace PayEase_CaseStudy.Repository
                 var existingCompensation = await _context.CompensationAdjustments.FindAsync(id);
                 if (existingCompensation == null)
                     throw new Exception($"Compensation with ID {id} not found");
-                existingCompensation.EmpId = compensation.EmpId;
                 existingCompensation.Amount = compensation.Amount;
                 existingCompensation.Category = compensation.Category;
                 existingCompensation.AppliedDate = compensation.AppliedDate;

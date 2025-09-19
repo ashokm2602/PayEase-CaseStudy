@@ -1,15 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PayEase_CaseStudy.Authentication;
 using PayEase_CaseStudy.DTOs;
 using PayEase_CaseStudy.Models;
+using PayEase_CaseStudy.Services;
 
 namespace PayEase_CaseStudy.Repository
 {
     public class EmployeeRepo : IEmployee
     {
         private readonly PayDbContext _context;
-        public EmployeeRepo(PayDbContext context)
+        private readonly ICurrentUserService _currentUserService;
+        public EmployeeRepo(PayDbContext context,ICurrentUserService currentUserService)
         {
             _context = context;
+            _currentUserService = currentUserService;
         }
 
         public async Task<Employee> AddEmployee(EmployeeDTO emp)
@@ -25,7 +29,9 @@ namespace PayEase_CaseStudy.Repository
                     DeptId = emp.DeptId,
                     ContactNumber = emp.ContactNumber,
                     Address = emp.Address,
-                    BaseSalary = emp.BaseSalary
+                    ApplicationUserId = emp.UserId,
+                    BaseSalary = emp.BaseSalary,
+
                 };
                 if (newEmp == null)
                     return null;
@@ -38,14 +44,48 @@ namespace PayEase_CaseStudy.Repository
                 throw new Exception("Error adding employee", ex);
             }
         }
+        public async Task<Employee> UpdateEmployeeWithUserId(string userId,EmployeeUpdateDTO employee)
+        {
+            try
+            {
+                if (employee == null)
+                    throw new ArgumentNullException(nameof(employee), "Employee DTO cannot be null");
+                
+                if (string.IsNullOrEmpty(userId))
+                    throw new Exception("Current user ID is null. Make sure the user is authenticated.");
+
+                var emp = await _context.Employees
+                    .Include(e => e.User)
+                    .FirstOrDefaultAsync(u => u.ApplicationUserId == userId);
+
+                if (emp == null)
+                    throw new Exception($"Employee not found for userId {userId}");
+
+                // Update fields
+                emp.ContactNumber = employee.ContactNumber;
+                emp.Address = employee.Address;
+                emp.FirstName = employee.FirstName;
+                emp.LastName = employee.LastName;
+                emp.DOB = employee.DOB;
+
+                _context.Employees.Update(emp);
+                await _context.SaveChangesAsync();
+
+                return emp;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error updating employee", ex);
+            }
+        }
+
 
         public async Task<List<Employee>> GetAllEmployees()
         {
             try
             {
                 var employees = await _context.Employees.Include(e => e.User).ToListAsync();
-                if (employees == null || employees.Count == 0)
-                    return null;
+                
                 return employees;
             }
             catch (Exception ex)
@@ -58,7 +98,7 @@ namespace PayEase_CaseStudy.Repository
         {
             try
             {
-                var emp = _context.Employees.Include(u=>u.User).FirstOrDefault(u => u.EmpId == id);
+                var emp = await _context.Employees.FirstOrDefaultAsync(u => u.EmpId == id);
                 if (emp == null)
                     return null;
                 return emp;
@@ -69,7 +109,7 @@ namespace PayEase_CaseStudy.Repository
             }
         }
 
-        public async Task<Employee> UpdateEmployee(int id, EmployeeDTO emp)
+        public async Task<Employee> UpdateEmployee(int id, EmployeeUpdateDTO emp)
         {
             try
             {
@@ -79,11 +119,9 @@ namespace PayEase_CaseStudy.Repository
                 existingEmp.FirstName = emp.FirstName;
                 existingEmp.LastName = emp.LastName;
                 existingEmp.DOB = emp.DOB;
-                existingEmp.HireDate = emp.HireDate;
-                existingEmp.DeptId = emp.DeptId;
                 existingEmp.ContactNumber = emp.ContactNumber;
                 existingEmp.Address = emp.Address;
-                existingEmp.BaseSalary = emp.BaseSalary;
+
                 _context.Employees.Update(existingEmp);
                 await _context.SaveChangesAsync();
                 return existingEmp;

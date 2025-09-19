@@ -11,6 +11,7 @@ namespace PayEase_CaseStudy.Models
         public int LogId { get; set; }
 
         // Foreign key to Identity User
+        [Required]
         public string ApplicationUserId { get; set; }
 
         [ForeignKey("ApplicationUserId")]

@@ -1,14 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PayEase_CaseStudy.Models;
+using PayEase_CaseStudy.Services;
 
 namespace PayEase_CaseStudy.Repository
 {
     public class DepartmentRepo : IDepartment
     {
         private readonly PayDbContext _context;
-        public DepartmentRepo(PayDbContext context)
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IAuditLog _auditLogRepo;
+
+        public DepartmentRepo(PayDbContext context, ICurrentUserService currentUserService, IAuditLog auditLogRepo)
         {
             _context = context;
+            _currentUserService = currentUserService;
+            _auditLogRepo = auditLogRepo;
         }
 
         public async Task<List<Department>> GetAllDepartments()
@@ -51,6 +57,9 @@ namespace PayEase_CaseStudy.Repository
                     return null;
                 _context.Departments.Add(newDepartment);
                 await _context.SaveChangesAsync();
+                
+
+
                 return newDepartment;
             }
             catch (Exception ex)

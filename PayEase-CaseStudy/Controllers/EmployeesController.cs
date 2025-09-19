@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,8 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/Employees
         [HttpGet("GetAllEmployees")]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetAllEmployees()
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IList<Employee>>> GetAllEmployees()
         {
             try
             {
@@ -43,6 +45,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/Employees/5
         [HttpGet("GetEmployeeById{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Employee>> GetEmployeeById(int id)
         {
             try
@@ -62,8 +65,9 @@ namespace PayEase_CaseStudy.Controllers
 
         // PUT: api/Employees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("UpdateEmployee{id}")]
-        public async Task<IActionResult> UpdateEmployee(int id, EmployeeDTO employee)
+        [HttpPut("UpdateEmployee{id,employee}")]
+        [Authorize(Roles = "Employee")]
+        public async Task<IActionResult> UpdateEmployee(int id, EmployeeUpdateDTO employee)
         {
             try
             {
@@ -80,9 +84,29 @@ namespace PayEase_CaseStudy.Controllers
             }
         }
 
+        [HttpPut("UpdateEmployeeWithUserId")]
+        [Authorize(Roles ="Employee")]
+        public async Task<IActionResult> UpdateEmployeeWithUserId(string userid,[FromBody]EmployeeUpdateDTO employee)
+        {
+            try
+            {
+                var updatedEmployee = await _employee.UpdateEmployeeWithUserId(userid,employee);
+                if (updatedEmployee == null)
+                {
+                    return NotFound("Employee not found.");
+                }
+                return Ok(updatedEmployee);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating employee", ex);
+            }
+        }
+
         // POST: api/Employees
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddEmployee")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Employee>> PostEmployee(EmployeeDTO employee)
         {
             try
@@ -102,6 +126,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // DELETE: api/Employees/5
         [HttpDelete("DeleteEmployee{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteEmployee(int id)
         {
             try

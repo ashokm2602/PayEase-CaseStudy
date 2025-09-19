@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using PayEase_CaseStudy.Authentication;
 
 namespace PayEase_CaseStudy.Models
@@ -11,11 +12,10 @@ namespace PayEase_CaseStudy.Models
         [Key]
         public int EmpId { get; set; }
 
-        // Foreign key to Identity User
-        public string ApplicationUserId { get; set; }
-
-        [ForeignKey("ApplicationUserId")]
-        public ApplicationUser User { get; set; }
+        // FK to Identity User
+        public string? ApplicationUserId { get; set; }
+        [JsonIgnore]
+        public ApplicationUser? User { get; set; }
 
         [Required, MaxLength(100)]
         public string FirstName { get; set; }
@@ -26,8 +26,9 @@ namespace PayEase_CaseStudy.Models
         public DateTime? DOB { get; set; }
         public DateTime HireDate { get; set; }
 
-        [ForeignKey("Department")]
         public int DeptId { get; set; }
+        [JsonIgnore]
+        public Department Department { get; set; }
 
         [MaxLength(15)]
         public string ContactNumber { get; set; }
@@ -39,9 +40,12 @@ namespace PayEase_CaseStudy.Models
         public decimal BaseSalary { get; set; }
 
         // Navigation
-        public Department Department { get; set; }
+        [JsonIgnore]
         public ICollection<Leave> Leaves { get; set; }
+        [JsonIgnore]
         public ICollection<PayrollDetail> PayrollDetails { get; set; }
+        [JsonIgnore]
         public ICollection<CompensationAdjustment> CompensationAdjustments { get; set; }
     }
+
 }

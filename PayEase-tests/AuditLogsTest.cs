@@ -48,7 +48,7 @@ namespace PayEase_CaseStudy.Tests
             var fakeUserService = serviceProvider.GetRequiredService<ICurrentUserService>();
 
             // ✅ Pass the fake service directly, not the whole provider
-            _context = new PayDbContext(options, fakeUserService);
+            _context = new PayDbContext(options);
             _context.Database.EnsureCreated();
 
             // Seed some audit logs
