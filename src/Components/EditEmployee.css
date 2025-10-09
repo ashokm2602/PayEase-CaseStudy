@@ -1,0 +1,140 @@
+.edit-employee-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(41, 45, 66, 0.31);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+/* Modal box styles */
+.edit-employee-modal {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 5px 30px rgba(21,41,71,0.19);
+  width: 410px;
+  max-width: 98vw;
+  min-width: 270px;
+  /* Controls height and enables scrolling for overflow */
+  max-height: 560px;
+  min-height: 400px;
+  padding: 36px 38px 28px 38px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  color: #222;
+  overflow-y: auto;
+  justify-content: flex-start;
+}
+
+.edit-employee-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.28rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 18px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.22rem;
+  cursor: pointer;
+  color: #222;
+  transition: color 0.13s;
+}
+.close-btn:hover {
+  color: #e53935;
+}
+
+.edit-employee-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1 1 auto; /* allows fields to shrink/expand inside the modal */
+}
+
+.field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.field-row label {
+  font-size: 1rem;
+  color: #213049;
+  font-weight: 500;
+}
+
+.field-row input {
+  padding: 10px 14px;
+  border: 1.3px solid #d4e7f8;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #fafdff;
+  color: #213049;
+  transition: border 0.14s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.field-row input:focus {
+  border: 1.4px solid #2563eb;
+  outline: none;
+  background: #eef3fa;
+  color: #222;
+}
+
+.edit-employee-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 18px;
+  margin-bottom: 0;
+}
+
+.cancel-btn {
+  background: #f5f8fa;
+  color: #222;
+  border: 1.2px solid #cfcfd9;
+  border-radius: 8px;
+  font-size: 1rem;
+  padding: 10px 22px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.12s, color 0.12s;
+}
+.cancel-btn:hover {
+  background: #eaf2fc;
+  color: #e53935;
+}
+
+.update-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  padding: 10px 26px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 9px rgba(51,131,255,0.09);
+  transition: background 0.13s;
+}
+.update-btn:hover {
+  background: #1746ae;
+}
+
+@media (max-width: 520px) {
+  .edit-employee-modal {
+    width: 98vw;
+    padding: 12px 4vw 12px 4vw;
+    min-height: unset;
+    max-height: 98vh;
+  }
+}

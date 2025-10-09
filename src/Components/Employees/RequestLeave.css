@@ -1,0 +1,119 @@
+.request-leave-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 11px rgba(60,90,180,0.11);
+  max-width: 390px;
+  margin: 24px auto 14px auto;
+  padding: 18px 20px 12px 20px;
+  border: 1px solid #ececec;
+}
+
+.request-leave-card:hover,
+.request-leave-card:focus-within {
+  box-shadow: 0 6px 24px rgba(60, 90, 180, 0.14);
+}
+
+.leave-request-form {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  align-items: stretch;
+}
+
+.leave-request-form h3 {
+  font-size: 1.16rem;
+  font-weight: 800;
+  color: #fa6600;
+  margin-bottom: 10px;
+  letter-spacing: 0.2px;
+}
+
+.leave-request-form label {
+  font-weight: 600;
+  font-size: 0.99rem;
+  color: #142841;
+  margin-bottom: 3.5px;
+  margin-top: 1px;
+  display: inline-block;
+}
+
+.leave-request-form input,
+.leave-request-form textarea,
+.leave-request-form select {
+  padding: 7px 11px;
+  border-radius: 6px;
+  border: 1px solid #d7d7e8;
+  background: #f8fafb;
+  font-size: 0.99rem;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #263958;
+  outline: none;
+  min-height: 35px;
+  transition: border 0.15s, box-shadow 0.13s;
+}
+
+.leave-request-form input:focus,
+.leave-request-form textarea:focus,
+.leave-request-form select:focus {
+  border: 1.1px solid #fa6600;
+  background: #fff;
+}
+
+.leave-request-form textarea {
+  resize: vertical;
+  min-height: 38px;
+  max-height: 80px;
+  font-size: 0.99rem;
+  line-height: 1.23;
+}
+
+.leave-request-form .form-group {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 4px;
+}
+
+.leave-request-form .form-group label {
+  min-width: 84px;
+}
+
+.leave-request-form button {
+  border-radius: 15px;
+  padding: 8px 25px;
+  font-size: 1.01rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  background: linear-gradient(90deg, #22b573, #16a085);
+  color: #fff;
+  margin-right: 13px;
+  margin-top: 6px;
+  box-shadow: 0 2px 7px rgba(30,210,110,0.12);
+  transition: background 0.17s, box-shadow 0.14s;
+}
+
+.leave-request-form .cancel-btn {
+  background: #e12d38;
+  color: #fff;
+}
+
+.leave-request-form .cancel-btn:hover {
+  background: #b91521;
+}
+
+.leave-request-form .approve-btn:hover,
+.leave-request-form button:not(.cancel-btn):hover {
+  background: #179d64;
+}
+
+@media (max-width: 600px) {
+  .request-leave-card {
+    max-width: 99vw;
+    padding: 12px 2vw 7px 2vw;
+  }
+  .leave-request-form h3 {
+    font-size: 1.02rem;
+  }
+}

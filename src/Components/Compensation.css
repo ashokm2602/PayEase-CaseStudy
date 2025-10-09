@@ -1,0 +1,120 @@
+.comp-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 18px 0 18px;
+  background: #fff;
+  min-height: 600px;
+  border-radius: 13px;
+  box-shadow: 0 2px 10px rgba(30,41,59,0.06);
+}
+
+.comp-header {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+.comp-header h2 {
+  color: #161b29;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.add-comp-btn {
+  background: #22b573;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 7px;
+  font-size: 1.07rem;
+  box-shadow: 0 2px 6px rgba(62,197,140,0.13);
+  cursor: pointer;
+  transition: background 0.17s;
+}
+.add-comp-btn:hover {
+  background: #189c61;
+}
+
+.comp-list {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.comp-card {
+  flex: 1 1 245px;
+  max-width: 300px;
+  min-width: 200px;
+  min-height: 122px;
+  background: #fff;
+  border-radius: 13px;
+  box-shadow: 0 3px 24px rgba(65,90,180,0.12);
+  padding: 20px 17px 15px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #20243a;
+  transition: box-shadow 0.18s;
+}
+
+.comp-card:hover {
+  box-shadow: 0 8px 32px rgba(30, 41, 95, 0.15);
+}
+
+.comp-card div {
+  font-size: 1.08rem;
+  color: #191e28;
+  font-weight: 600;
+}
+
+.comp-card strong {
+  color: #234cb6;
+  font-weight: 800;
+  margin-right: 6px;
+}
+
+.comp-delete-btn {
+  background: #ffeaea;
+  color: #e12d38;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 26px;
+  font-size: 1rem;
+  font-weight: 700;
+  align-self: flex-end;
+  cursor: pointer;
+  margin-top: 13px;
+  transition: background 0.15s;
+}
+.comp-delete-btn:hover {
+  background: #fcbcbc;
+}
+
+.no-comp-msg {
+  padding: 30px 0;
+  font-size: 1.13rem;
+  text-align: center;
+  color: #104be3;
+  font-weight: 700;
+}
+
+.comp-error {
+  color: #de2632;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 900px) {
+  .comp-list {
+    flex-direction: column;
+    gap: 13px;
+  }
+  .comp-card {
+    padding: 13px 4vw 14px 4vw;
+    min-width: unset;
+    max-width: 100vw;
+  }
+}

@@ -1,0 +1,154 @@
+.leave-container {
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+.leave-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.leave-header h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #182a47;
+  margin: 0;
+  flex: 1;
+}
+
+.leave-list {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+.leave-card {
+  flex: 1 1 320px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 11px rgba(60,90,180,0.10);
+  padding: 24px 26px 18px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.leave-card-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.leave-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #fa6600;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leave-details {
+  flex: 1;
+}
+
+.leave-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1c2638;
+}
+
+.leave-type {
+  font-size: 1.02rem;
+  color: #2680ff;
+  font-weight: 500;
+}
+
+.leave-status {
+  border-radius: 13px;
+  padding: 7px 15px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  min-width: 84px;
+  text-align: center;
+  margin-left: auto;
+}
+
+.leave-status-approved {
+  background: #e0efff;
+  color: #285be0;
+}
+.leave-status-pending {
+  background: #fff8e2;
+  color: #be9923;
+}
+.leave-status-rejected {
+  background: #ffeaeb;
+  color: #e12d38;
+}
+
+.leave-info {
+  display: flex;
+  gap: 18px;
+  font-size: 1.08rem;
+  color: #2d375c;
+  font-weight: 600;
+}
+
+.leave-info-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.leave-reason {
+  color: #53616e;
+  font-size: 1.04rem;
+  font-weight: 800;
+}
+
+.leave-applied {
+  margin-top: auto;
+  font-size: 0.98rem;
+  color: #18736b;
+  font-weight: 600;
+}
+
+.no-leaves-msg {
+  padding: 38px 0;
+  font-size: 1.05rem;
+  text-align: center;
+  color: #285be0;
+  font-weight: 700;
+}
+
+.approve-btn {
+  background: #22b573;
+  color: #fff;
+  border-radius: 20px;
+  padding: 10px 24px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  box-shadow: 0px 2px 7px rgba(0,0,0,0.09);
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-left: 4px;
+}
+.approve-btn:hover {
+  background: #0ea85e;
+}
+
+@media (max-width: 900px) {
+  .leave-list {
+    flex-direction: column;
+    gap: 18px;
+  }
+}

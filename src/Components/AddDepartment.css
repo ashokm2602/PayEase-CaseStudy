@@ -1,0 +1,122 @@
+.add-department-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(41, 45, 66, 0.31);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.add-department-modal {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 5px 30px rgba(21,41,71,0.19);
+  width: 440px;
+  padding: 36px 38px 28px 38px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  color: #222;
+}
+
+.add-department-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.45rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 18px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.22rem;
+  cursor: pointer;
+  color: #222;
+  transition: color 0.13s;
+}
+.close-btn:hover {
+  color: #e53935;
+}
+
+.add-department-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.field-row label {
+  font-size: 1rem;
+  color: #213049;
+  font-weight: 500;
+}
+
+.field-row input, .field-row textarea {
+  padding: 10px 14px;
+  border: 1.3px solid #d4e7f8;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #fafdff;
+  color: #213049;
+  transition: border 0.14s;
+  width: 100%;
+  box-sizing: border-box;
+  resize: none;
+}
+
+.field-row input:focus, .field-row textarea:focus {
+  border: 1.4px solid #22b573;
+  outline: none;
+  background: #eef3fa;
+  color: #222;
+}
+
+.add-department-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.cancel-btn {
+  background: #f5f8fa;
+  color: #222;
+  border: 1.2px solid #cfcfd9;
+  border-radius: 8px;
+  font-size: 1rem;
+  padding: 10px 22px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.12s, color 0.12s;
+}
+.cancel-btn:hover {
+  background: #eaf2fc;
+  color: #e53935;
+}
+
+.add-btn {
+  background: #22b573;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  padding: 10px 26px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 9px rgba(34,181,115,0.09);
+  transition: background 0.13s;
+}
+.add-btn:hover {
+  background: #189c61;
+}

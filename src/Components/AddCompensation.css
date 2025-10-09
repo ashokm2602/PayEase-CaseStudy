@@ -1,0 +1,132 @@
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(18, 34, 56, 0.22);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 42px rgba(45, 65, 120, 0.18);
+  padding: 32px 28px;
+  min-width: 280px;
+  max-width: 97vw;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal h3 {
+  font-size: 1.24rem;
+  font-weight: 700;
+  color: #181b29;
+  margin-bottom: 14px;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+/* Uniform style for all inputs and selects */
+.modal input,
+.select-input {
+  width: 100%;
+  font-size: 1.02rem;
+  padding: 10px 12px;
+  border-radius: 7px;
+  border: 1.4px solid #dbe6ef;
+  background: #fafdff;
+  color: #232944;
+  margin-bottom: 0;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.select-input {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.modal input:focus,
+.select-input:focus {
+  border-color: #22b573;
+  outline: none;
+}
+
+/* Visible datetime input */
+input[type="datetime-local"] {
+  color: #232944;
+  background: #fafdff;
+  border: 1.4px solid #dbe6ef;
+  border-radius: 7px;
+  padding: 10px 12px;
+  font-size: 1.02rem;
+}
+
+input[type="datetime-local"]:focus {
+  border-color: #22b573;
+}
+
+/* Error Area */
+.error {
+  margin: 6px 0 3px 0;
+  color: #de2632;
+  background: #ffeaea;
+  border-radius: 7px;
+  padding: 8px 13px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 12px;
+  justify-content: flex-end;
+}
+
+.actions button[type="submit"] {
+  border-radius: 7px;
+  padding: 11px 26px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  background: #22b573;
+  color: #fff;
+  transition: background 0.15s;
+}
+
+.actions button[type="button"] {
+  border-radius: 7px;
+  padding: 11px 18px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: #bfc7d1;
+  color: #232944;
+  transition: background 0.15s;
+}
+
+.actions button[type="submit"]:hover {
+  background: #179c5c;
+}
+.actions button[type="button"]:hover {
+  background: #98a3b3;
+  color: #181b29;
+}
+
+@media (max-width: 600px) {
+  .modal {
+    padding: 14px 4vw;
+    width: 99vw;
+  }
+}

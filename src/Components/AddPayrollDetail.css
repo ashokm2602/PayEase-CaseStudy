@@ -1,0 +1,106 @@
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(18, 34, 56, 0.22);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 42px rgba(45, 65, 120, 0.22);
+  padding: 28px 22px;
+  min-width: 240px;
+  max-width: 96vw;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal h3 {
+  font-size: 1.22rem;
+  font-weight: 700;
+  color: #181b29;
+  margin-bottom: 12px;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.modal input[type="number"] {
+  width: 100%;
+  font-size: 1rem;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1.4px solid #dbe6ef;
+  background: #fafdff;
+  color: #232944;
+  margin-bottom: 7px;
+  transition: border-color 0.16s;
+}
+
+.modal input[type="number"]:focus {
+  border-color: #22b573;
+  outline: none;
+}
+
+.error {
+  margin: 8px 0 4px 0;
+  color: #de2632;
+  background: #ffeaea;
+  border-radius: 7px;
+  padding: 7px 11px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 13px;
+  margin-top: 14px;
+  justify-content: flex-end;
+}
+
+.actions button[type="submit"] {
+  border-radius: 7px;
+  padding: 9px 18px;
+  font-size: 1.01rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  background: #22b573;
+  color: #fff;
+  transition: background 0.18s;
+}
+
+.actions button[type="button"] {
+  border-radius: 7px;
+  padding: 9px 13px;
+  font-size: 1.01rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: #98a3b3;
+  color: #181b29;
+  transition: background 0.16s;
+}
+
+.actions button[type="submit"]:hover {
+  background: #189c61;
+}
+.actions button[type="button"]:hover {
+  background: #7891b3;
+}
+
+@media (max-width: 600px) {
+  .modal {
+    padding: 12px 5vw;
+    width: 99vw;
+  }
+}

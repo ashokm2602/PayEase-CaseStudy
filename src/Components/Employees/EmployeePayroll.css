@@ -1,0 +1,148 @@
+.payroll-container {
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  background: #fff;
+}
+
+.payroll-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.payroll-header h2 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #17305c;
+  margin: 0;
+  flex: 1;
+}
+
+.payroll-list {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.payroll-card {
+  flex: 1 1 320px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 14px rgba(36,54,100,0.11);
+  border: 1px solid #dde3eb;
+  padding: 24px 26px 18px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 265px;
+  max-width: 390px;
+}
+
+.payroll-card-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #234;
+  font-size: 1.09rem;
+  font-weight: 700;
+}
+
+.payroll-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #274275;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payroll-columns {
+  flex: 1;
+}
+
+.payroll-row {
+  font-size: 1.12rem;
+  color: #222a38;
+  display: flex;
+  gap: 38px;
+  font-weight: 700;
+}
+
+.payroll-label {
+  color: #182a47;
+  font-weight: 700;
+}
+
+.payroll-value {
+  color: #207c4a;
+  font-weight: 700;
+}
+
+.payroll-id-label,
+.payroll-basic-label,
+.payroll-net-label {
+  color: #144a7c;
+  font-weight: 700;
+}
+
+.payroll-basic-value,
+.payroll-net-value {
+  color: #1c883a;
+  font-weight: 700;
+}
+
+.payroll-status {
+  border-radius: 13px;
+  padding: 7px 15px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  min-width: 84px;
+  text-align: center;
+  margin-left: auto;
+  color: #fff;
+}
+
+.payroll-status-paid {
+  background: #22c55e;
+}
+
+.payroll-status-pending {
+  background: #fff8e2;
+  color: #bfa21f;
+}
+
+.payroll-status-failed {
+  background: #ffeaeb;
+  color: #e12d38;
+}
+
+.payroll-msg {
+  padding: 38px 0;
+  font-size: 1.09rem;
+  text-align: center;
+  color: #2e68e2;
+  font-weight: 700;
+}
+
+.payroll-error {
+  color: #e12d39;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .payroll-list {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .payroll-card {
+    min-width: 0;
+    max-width: unset;
+  }
+}
