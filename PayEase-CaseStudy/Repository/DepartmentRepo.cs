@@ -8,13 +8,11 @@ namespace PayEase_CaseStudy.Repository
     {
         private readonly PayDbContext _context;
         private readonly ICurrentUserService _currentUserService;
-        private readonly IAuditLog _auditLogRepo;
 
-        public DepartmentRepo(PayDbContext context, ICurrentUserService currentUserService, IAuditLog auditLogRepo)
+        public DepartmentRepo(PayDbContext context, ICurrentUserService currentUserService)
         {
             _context = context;
             _currentUserService = currentUserService;
-            _auditLogRepo = auditLogRepo;
         }
 
         public async Task<List<Department>> GetAllDepartments()
@@ -28,6 +26,11 @@ namespace PayEase_CaseStudy.Repository
             {
                 throw new Exception("Error retrieving departments", ex);
             }
+        }
+
+        public async Task<int> GetDepartmentsCount()
+        {
+            return await _context.Departments.CountAsync();
         }
 
         public async Task<Department> GetDepartmentById(int id)

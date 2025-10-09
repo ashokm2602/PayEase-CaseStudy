@@ -25,7 +25,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/Payrolls
         [HttpGet("GetAllPayrolls")]
-        [Authorize(Roles = "Payroll Processor")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<Payroll>>> GetAllPayrolls()
         {
             try
@@ -45,7 +45,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/Payrolls/5
         [HttpGet("GetPayrollById{id}")]
-        [Authorize(Roles = "Payroll Processor")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Payroll>> GetPayrollById(int id)
         {
             try
@@ -65,7 +65,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // PUT: api/Payrolls/5
         [HttpPut("UpdatePayroll{id}")]
-        [Authorize(Roles = "Payroll Processor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdatePayroll(int id, PayrollDTO payroll)
         {
             try
@@ -85,7 +85,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // POST: api/Payrolls
         [HttpPost("AddPayroll")]
-        [Authorize(Roles = "Payroll Processor")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Payroll>> AddPayroll(PayrollDTO payroll)
         {
             try
@@ -104,7 +104,7 @@ namespace PayEase_CaseStudy.Controllers
         }
             // DELETE: api/Payrolls/5
             [HttpDelete("DeletePayroll{id}")]
-        [Authorize(Roles = "Payroll Processor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeletePayroll(int id)
             {
                 try

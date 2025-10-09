@@ -25,7 +25,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/PayrollDetails
         [HttpGet("GetAllPayrollDetails")]
-        [Authorize(Roles = "Payroll Processor,Manager")]
+        [Authorize(Roles = "Admin")]
 
         public async Task<ActionResult<List<PayrollDetail>>> GetAllPayrollDetails()
         {
@@ -44,7 +44,7 @@ namespace PayEase_CaseStudy.Controllers
             }
         }
         [HttpGet("GetPayrollDetailsByEmployeeId{employeeId}")]
-        [Authorize(Roles = "Employee")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<PayrollDetail>>> GetPayrollDetailsByEmployeeId(int employeeId)
         {
             try
@@ -87,7 +87,7 @@ namespace PayEase_CaseStudy.Controllers
         // POST: api/PayrollDetails
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddPayrollDetail")]
-        [Authorize(Roles = "Payroll Processor")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<PayrollDetail>> AddPayrollDetail(PayrollDetailDTO payrollDetail)
         {
             try
@@ -107,7 +107,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // DELETE: api/PayrollDetails/5
         [HttpDelete("DeletePayrollDetail{id}")]
-        [Authorize(Roles = "Payroll Processor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeletePayrollDetail(int id)
         {
             try

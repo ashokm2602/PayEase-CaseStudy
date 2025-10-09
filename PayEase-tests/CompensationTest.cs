@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿
+using NUnit.Framework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -12,10 +13,10 @@ using PayEase_CaseStudy.Services;
 namespace PayEase_CaseStudy.Tests
 {
     // Fake service to simulate current user
-   
+
 
     [TestFixture]
-    public class CompensationsTest
+    public class CompensationTest
     {
         private PayDbContext _context;
         private CompensationRepo _repo;
@@ -28,7 +29,6 @@ namespace PayEase_CaseStudy.Tests
                 .Options;
 
             // Reuse the FakeCurrentUserService from AuditLogs test
-            var fakeUserService = new FakeCurrentUserService("TestUser");
 
             _context = new PayDbContext(options);
             _context.Database.EnsureCreated();

@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PayEase_CaseStudy.DTOs;
 using PayEase_CaseStudy.Models;
 
@@ -7,6 +11,7 @@ namespace PayEase_CaseStudy.Repository
     public class LeaveRepo : ILeave
     {
         private readonly PayDbContext _context;
+
         public LeaveRepo(PayDbContext context)
         {
             _context = context;
@@ -25,9 +30,44 @@ namespace PayEase_CaseStudy.Repository
             }
             catch (Exception ex)
             {
-                // Log the exception (you can use a logging framework here)
                 throw new Exception("An error occurred while retrieving leaves.", ex);
             }
+        }
+
+        // Fetch leaves with employee names with null-safety
+        public async Task<List<LeaveWithEmployeeDTO>> GetAllLeavesWithEmployeeNames()
+        {
+            try
+            {
+                var leavesWithEmployees = await _context.Leaves
+    // .Include(l => l.Employee)  // Temporarily comment out
+    .Select(l => new LeaveWithEmployeeDTO
+    {
+        LeaveId = l.LeaveId,
+        EmpId = l.EmpId,
+        EmployeeName = (l.Employee != null) ? l.Employee.FirstName + " " + l.Employee.LastName : "Unknown",
+
+        LeaveType = l.LeaveType,
+        StartDate = l.StartDate,
+        EndDate = l.EndDate,
+        Status = l.Status
+    })
+    .ToListAsync();
+
+
+                return leavesWithEmployees ?? new List<LeaveWithEmployeeDTO>();
+                
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving leaves with employee names.", ex);
+            }
+        }
+
+        public async Task<int> GetPendingLeavesCount()
+        {
+            return await _context.Leaves.CountAsync(l => l.Status == "pending");
         }
 
         public async Task<Leave> GetLeaveById(int id)
@@ -36,14 +76,11 @@ namespace PayEase_CaseStudy.Repository
             {
                 var leave = await _context.Leaves.FindAsync(id);
                 if (leave == null)
-                {
                     throw new KeyNotFoundException($"Leave with ID {id} not found.");
-                }
                 return leave;
             }
             catch (Exception ex)
             {
-                // Log the exception (you can use a logging framework here)
                 throw new Exception("An error occurred while retrieving the leave.", ex);
             }
         }
@@ -84,13 +121,10 @@ namespace PayEase_CaseStudy.Repository
                 if (leave == null)
                     throw new ArgumentNullException(nameof(leave), "Leave cannot be null");
 
-                
-
                 var existingLeave = await _context.Leaves.FindAsync(id);
                 if (existingLeave == null)
                     throw new KeyNotFoundException($"Leave with ID {id} not found.");
 
-               
                 existingLeave.Status = leave;
 
                 _context.Leaves.Update(existingLeave);
@@ -102,8 +136,47 @@ namespace PayEase_CaseStudy.Repository
                 throw new Exception($"Error updating leave with ID {id}", ex);
             }
         }
+        public async Task<List<LeaveWithEmployeeDTO>> GetLeavesByEmployeeId(int employeeId)
+        {
+            try
+            {
+                var leaves = await _context.Leaves
+                    .Where(l => l.EmpId == employeeId)
+                    //.Include(l => l.Employee) // if needed
+                    .Select(l => new LeaveWithEmployeeDTO
+                    {
+                        LeaveId = l.LeaveId,
+                        EmpId = l.EmpId,
+                        EmployeeName = (l.Employee != null) ? l.Employee.FirstName + " " + l.Employee.LastName : "Unknown",
+                        LeaveType = l.LeaveType,
+                        StartDate = l.StartDate,
+                        EndDate = l.EndDate,
+                        Status = l.Status,
+                       
+                    })
+                    .ToListAsync();
 
+                return leaves;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to retrieve leaves for employee", ex);
+            }
+        }
 
+        public async Task<int> GetPendingLeavesCountByEmployee(int employeeId)
+        {
+            return await _context.Leaves
+                .Where(l => l.EmpId == employeeId && l.Status == "Pending")
+                .CountAsync();
+        }
+
+        public async Task<int> GetTotalLeavesCountByEmployee(int employeeId)
+        {
+            return await _context.Leaves
+                .Where(l => l.EmpId == employeeId)
+                .CountAsync();
+        }
 
 
         public async Task DeleteLeave(int id)
@@ -113,6 +186,7 @@ namespace PayEase_CaseStudy.Repository
                 var leave = await _context.Leaves.FindAsync(id);
                 if (leave == null)
                     throw new Exception($"Leave with ID {id} not found");
+
                 _context.Leaves.Remove(leave);
                 await _context.SaveChangesAsync();
             }

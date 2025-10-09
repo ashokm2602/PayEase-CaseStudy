@@ -43,6 +43,7 @@ namespace PayEase_CaseStudy.Repository
             }
         }
 
+       
         public async Task<Payroll> UpdatePayroll(int id, PayrollDTO payroll)
         {
             try

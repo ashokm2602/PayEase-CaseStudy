@@ -12,8 +12,8 @@ using PayEase_CaseStudy.Models;
 namespace PayEase_CaseStudy.Migrations
 {
     [DbContext(typeof(PayDbContext))]
-    [Migration("20250917120054_InitialAppMigration")]
-    partial class InitialAppMigration
+    [Migration("20251006121116_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,139 @@ namespace PayEase_CaseStudy.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
             modelBuilder.Entity("PayEase_CaseStudy.Authentication.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -34,10 +167,12 @@ namespace PayEase_CaseStudy.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -49,10 +184,12 @@ namespace PayEase_CaseStudy.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -70,42 +207,20 @@ namespace PayEase_CaseStudy.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ApplicationUser");
-                });
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
 
-            modelBuilder.Entity("PayEase_CaseStudy.Models.AuditLog", b =>
-                {
-                    b.Property<int>("LogId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LogId"));
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("LogId");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AuditLogs");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("PayEase_CaseStudy.Models.CompensationAdjustment", b =>
@@ -135,9 +250,14 @@ namespace PayEase_CaseStudy.Migrations
                     b.Property<int>("EmpId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("EmployeeEmpId")
+                        .HasColumnType("int");
+
                     b.HasKey("AdjustmentId");
 
                     b.HasIndex("EmpId");
+
+                    b.HasIndex("EmployeeEmpId");
 
                     b.ToTable("CompensationAdjustments");
                 });
@@ -174,7 +294,6 @@ namespace PayEase_CaseStudy.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("ApplicationUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("BaseSalary")
@@ -187,6 +306,9 @@ namespace PayEase_CaseStudy.Migrations
 
                     b.Property<DateTime?>("DOB")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("DepartmentDeptId")
+                        .HasColumnType("int");
 
                     b.Property<int>("DeptId")
                         .HasColumnType("int");
@@ -204,11 +326,18 @@ namespace PayEase_CaseStudy.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("EmpId");
 
                     b.HasIndex("ApplicationUserId");
 
+                    b.HasIndex("DepartmentDeptId");
+
                     b.HasIndex("DeptId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Employees");
                 });
@@ -222,6 +351,9 @@ namespace PayEase_CaseStudy.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LeaveId"));
 
                     b.Property<int>("EmpId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EmployeeEmpId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("EndDate")
@@ -243,6 +375,8 @@ namespace PayEase_CaseStudy.Migrations
                     b.HasKey("LeaveId");
 
                     b.HasIndex("EmpId");
+
+                    b.HasIndex("EmployeeEmpId");
 
                     b.ToTable("Leaves");
                 });
@@ -288,95 +422,117 @@ namespace PayEase_CaseStudy.Migrations
                     b.Property<int>("EmpId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("EmployeeEmpId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("NetSalary")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("PayrollId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PayrollId1")
+                        .HasColumnType("int");
+
                     b.HasKey("PayrollDetailId");
 
                     b.HasIndex("EmpId");
 
+                    b.HasIndex("EmployeeEmpId");
+
                     b.HasIndex("PayrollId");
+
+                    b.HasIndex("PayrollId1");
 
                     b.ToTable("PayrollDetails");
                 });
 
-            modelBuilder.Entity("PayEase_CaseStudy.Models.User", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("EmployeeEmpId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("EmployeeEmpId");
-
-                    b.ToTable("Users");
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("PayEase_CaseStudy.Models.AuditLog", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("PayEase_CaseStudy.Authentication.ApplicationUser", "User")
+                    b.HasOne("PayEase_CaseStudy.Authentication.ApplicationUser", null)
                         .WithMany()
-                        .HasForeignKey("ApplicationUserId")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("PayEase_CaseStudy.Authentication.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PayEase_CaseStudy.Models.User", null)
-                        .WithMany("AuditLogs")
-                        .HasForeignKey("UserId");
+                    b.HasOne("PayEase_CaseStudy.Authentication.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Navigation("User");
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("PayEase_CaseStudy.Authentication.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PayEase_CaseStudy.Models.CompensationAdjustment", b =>
                 {
                     b.HasOne("PayEase_CaseStudy.Models.Employee", "Employee")
-                        .WithMany("CompensationAdjustments")
+                        .WithMany()
                         .HasForeignKey("EmpId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("PayEase_CaseStudy.Models.Employee", null)
+                        .WithMany("CompensationAdjustments")
+                        .HasForeignKey("EmployeeEmpId");
 
                     b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("PayEase_CaseStudy.Models.Employee", b =>
                 {
-                    b.HasOne("PayEase_CaseStudy.Authentication.ApplicationUser", "User")
+                    b.HasOne("PayEase_CaseStudy.Authentication.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("PayEase_CaseStudy.Models.Department", null)
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartmentDeptId");
 
                     b.HasOne("PayEase_CaseStudy.Models.Department", "Department")
-                        .WithMany("Employees")
+                        .WithMany()
                         .HasForeignKey("DeptId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("PayEase_CaseStudy.Authentication.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Department");
 
@@ -386,10 +542,14 @@ namespace PayEase_CaseStudy.Migrations
             modelBuilder.Entity("PayEase_CaseStudy.Models.Leave", b =>
                 {
                     b.HasOne("PayEase_CaseStudy.Models.Employee", "Employee")
-                        .WithMany("Leaves")
+                        .WithMany()
                         .HasForeignKey("EmpId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("PayEase_CaseStudy.Models.Employee", null)
+                        .WithMany("Leaves")
+                        .HasForeignKey("EmployeeEmpId");
 
                     b.Navigation("Employee");
                 });
@@ -397,31 +557,28 @@ namespace PayEase_CaseStudy.Migrations
             modelBuilder.Entity("PayEase_CaseStudy.Models.PayrollDetail", b =>
                 {
                     b.HasOne("PayEase_CaseStudy.Models.Employee", "Employee")
-                        .WithMany("PayrollDetails")
+                        .WithMany()
                         .HasForeignKey("EmpId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PayEase_CaseStudy.Models.Payroll", "Payroll")
+                    b.HasOne("PayEase_CaseStudy.Models.Employee", null)
                         .WithMany("PayrollDetails")
+                        .HasForeignKey("EmployeeEmpId");
+
+                    b.HasOne("PayEase_CaseStudy.Models.Payroll", "Payroll")
+                        .WithMany()
                         .HasForeignKey("PayrollId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PayEase_CaseStudy.Models.Payroll", null)
+                        .WithMany("PayrollDetails")
+                        .HasForeignKey("PayrollId1");
+
                     b.Navigation("Employee");
 
                     b.Navigation("Payroll");
-                });
-
-            modelBuilder.Entity("PayEase_CaseStudy.Models.User", b =>
-                {
-                    b.HasOne("PayEase_CaseStudy.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeEmpId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("PayEase_CaseStudy.Models.Department", b =>
@@ -441,11 +598,6 @@ namespace PayEase_CaseStudy.Migrations
             modelBuilder.Entity("PayEase_CaseStudy.Models.Payroll", b =>
                 {
                     b.Navigation("PayrollDetails");
-                });
-
-            modelBuilder.Entity("PayEase_CaseStudy.Models.User", b =>
-                {
-                    b.Navigation("AuditLogs");
                 });
 #pragma warning restore 612, 618
         }

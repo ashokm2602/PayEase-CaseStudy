@@ -25,7 +25,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/CompensationAdjustments
         [HttpGet("GetAllCompensationAdjustments")]
-        [Authorize(Roles = "Payroll Processor")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<CompensationAdjustment>>> GetCompensations()
         {
             try
@@ -45,7 +45,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/CompensationAdjustments/5
         [HttpGet("GetCompensationById{id}")]
-        [Authorize(Roles = "Payroll Processor")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CompensationAdjustment>> GetCompensationById(int id)
         {
             try
@@ -84,7 +84,7 @@ namespace PayEase_CaseStudy.Controllers
         // PUT: api/CompensationAdjustments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("UpdateCompensation{id}")]
-        [Authorize(Roles = "Payroll Processor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCompensation(int id, CompensationDTO compensationAdjustment)
         {
             try
@@ -106,7 +106,7 @@ namespace PayEase_CaseStudy.Controllers
         // POST: api/CompensationAdjustments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddCompensation")]
-        [Authorize(Roles = "Payroll Processor")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CompensationAdjustment>> AddCompensation(CompensationDTO compensationAdjustment)
         {
             try
@@ -127,7 +127,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // DELETE: api/CompensationAdjustments/5
         [HttpDelete("DeleteCompensation{id}")]
-        [Authorize(Roles = "Payroll Processor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCompensationAdjustment(int id)
         {
             try

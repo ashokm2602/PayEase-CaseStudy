@@ -26,8 +26,6 @@ namespace PayEase_CaseStudy.Models
         // Navigation
         [JsonIgnore]
         public Employee Employee { get; set; }
-        [JsonIgnore]
-        public ICollection<AuditLog> AuditLogs { get; set; }
 
     }
 }

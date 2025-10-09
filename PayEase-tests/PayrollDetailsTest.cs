@@ -10,7 +10,7 @@ using PayEase_CaseStudy.Repository;
 namespace PayEase_CaseStudy.Tests
 {
     [TestFixture]
-    public class PayrollDetailRepoTests
+    public class PayrollDetailsTests
     {
         private PayDbContext _context;
         private PayrollDetailRepo _repo;
@@ -22,7 +22,6 @@ namespace PayEase_CaseStudy.Tests
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
-            var fakeUserService = new FakeCurrentUserService("TestUser");
 
             _context = new PayDbContext(options); _context.Database.EnsureCreated();
 
@@ -59,7 +58,7 @@ namespace PayEase_CaseStudy.Tests
         [Test]
         public async Task GetPayrollDetailById_Should_Return_Correct_PayrollDetail()
         {
-            var dto = new PayrollDetailDTO { PayrollId = 1, EmpId = 1};
+            var dto = new PayrollDetailDTO { PayrollId = 1, EmpId = 1 };
             var added = await _repo.AddPayrollDetail(dto);
 
             var result = await _repo.GetPayrollDetailById(added.PayrollDetailId);
@@ -71,8 +70,8 @@ namespace PayEase_CaseStudy.Tests
         [Test]
         public async Task GetAllPayrollDetails_Should_Return_All_Details()
         {
-            await _repo.AddPayrollDetail(new PayrollDetailDTO { PayrollId = 1, EmpId = 1});
-            await _repo.AddPayrollDetail(new PayrollDetailDTO { PayrollId = 2, EmpId = 1});
+            await _repo.AddPayrollDetail(new PayrollDetailDTO { PayrollId = 1, EmpId = 1 });
+            await _repo.AddPayrollDetail(new PayrollDetailDTO { PayrollId = 2, EmpId = 1 });
 
             var result = await _repo.GetAllPayrollDetails();
 
@@ -82,10 +81,10 @@ namespace PayEase_CaseStudy.Tests
         [Test]
         public async Task UpdatePayrollDetail_Should_Update_BasicSalary()
         {
-            var dto = new PayrollDetailDTO { PayrollId = 1, EmpId = 1};
+            var dto = new PayrollDetailDTO { PayrollId = 1, EmpId = 1 };
             var added = await _repo.AddPayrollDetail(dto);
 
-            var updateDto = new PayrollDetailDTO { PayrollId = 1, EmpId = 1};
+            var updateDto = new PayrollDetailDTO { PayrollId = 1, EmpId = 1 };
             var updated = await _repo.UpdatePayrollDetail(added.PayrollDetailId, updateDto);
 
             Assert.That(updated.BasicSalary, Is.EqualTo(8000));

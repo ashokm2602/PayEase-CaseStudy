@@ -16,6 +16,10 @@ namespace PayEase_CaseStudy.Repository
             _currentUserService = currentUserService;
         }
 
+        public async Task<int> GetEmployeesCount()
+        {
+            return await _context.Employees.CountAsync();
+        }
         public async Task<Employee> AddEmployee(EmployeeDTO emp)
         {
             try
@@ -131,6 +135,12 @@ namespace PayEase_CaseStudy.Repository
                 throw new Exception($"Error updating employee with ID {id}", ex);
             }
         }
+
+        public async Task<Employee> GetEmployeeByUserId(string userId)
+        {
+            return await _context.Employees.FirstOrDefaultAsync(e => e.ApplicationUserId == userId);
+        }
+
 
         public async Task DeleteEmployee(int id)
         {

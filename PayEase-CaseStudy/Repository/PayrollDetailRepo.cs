@@ -22,13 +22,6 @@ namespace PayEase_CaseStudy.Repository
                 if (payrollDetail == null)
                     throw new ArgumentNullException(nameof(payrollDetail), "PayrollDetail cannot be null");
 
-                // Create new PayrollDetail
-                var newpay = new PayrollDetail
-                {
-                    PayrollId = payrollDetail.PayrollId,
-                    EmpId = payrollDetail.EmpId,
-                };
-
                 // Find employee
                 var emp = await _context.Employees.FindAsync(payrollDetail.EmpId);
                 if (emp == null)
@@ -36,8 +29,13 @@ namespace PayEase_CaseStudy.Repository
                     throw new KeyNotFoundException("EmployeeId is not found.");
                 }
 
-                // ✅ Assign PayrollDetail.BasicSalary → Employee.BaseSalary
-                _context.Employees.Update(emp);
+                // ✅ Create new PayrollDetail with BasicSalary from Employee
+                var newpay = new PayrollDetail
+                {
+                    PayrollId = payrollDetail.PayrollId,
+                    EmpId = payrollDetail.EmpId,
+                    BasicSalary = emp.BaseSalary // fetch from employee
+                };
 
                 // Save first so EF generates PayrollDetailId
                 _context.PayrollDetails.Add(newpay);
@@ -60,6 +58,13 @@ namespace PayEase_CaseStudy.Repository
         }
 
 
+        public async Task<PayrollDetail> GetLatestPayrollDetailByEmployee(int empId)
+        {
+            return await _context.PayrollDetails
+                .Where(pd => pd.EmpId == empId)
+                .OrderByDescending(pd => pd.PayrollId) // or .OrderByDescending(pd => pd.PayrollDetailId) if that's the chronology
+                .FirstOrDefaultAsync();
+        }
 
 
         public async Task<PayrollDetail?> GetPayrollDetailById(int id)

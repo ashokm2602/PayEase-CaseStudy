@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PayEase_CaseStudy.DTOs;
 using PayEase_CaseStudy.Models;
 using PayEase_CaseStudy.Repository;
@@ -23,29 +20,31 @@ namespace PayEase_CaseStudy.Controllers
             _leave = leave;
         }
 
-        // GET: api/Leaves
+        // GET: api/Leaves/GetAllLeaves
         [HttpGet("GetAllLeaves")]
-        [Authorize(Roles = "Manager")]
-        public async Task<ActionResult<IList<Leave>>> GetLeaves()
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IList<LeaveWithEmployeeDTO>>> GetAllLeaves()
         {
             try
             {
-                var leaves = await _leave.GetAllLeaves();
+                var leaves = await _leave.GetAllLeavesWithEmployeeNames();
+
                 if (leaves == null || leaves.Count == 0)
                 {
                     return NotFound("No leaves found.");
                 }
+
                 return Ok(leaves);
             }
             catch (Exception e)
             {
-                throw new Exception("Error retrieving leaves", e);
+                return StatusCode(500, $"Error retrieving leaves: {e.Message}");
             }
         }
 
-        // GET: api/Leaves/5
+        // GET: api/Leaves/GetLeaveById5
         [HttpGet("GetLeaveById{id}")]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Leave>> GetLeave(int id)
         {
             try
@@ -63,10 +62,9 @@ namespace PayEase_CaseStudy.Controllers
             }
         }
 
-        // PUT: api/Leaves/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/Leaves/UpdateLeave5
         [HttpPut("UpdateLeave{id}")]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateLeave(int id, string leave)
         {
             try
@@ -84,8 +82,7 @@ namespace PayEase_CaseStudy.Controllers
             }
         }
 
-        // POST: api/Leaves
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/Leaves/AddLeave
         [HttpPost("AddLeave")]
         [Authorize(Roles = "Employee")]
         public async Task<ActionResult<Leave>> PostLeave(LeaveDTO leave)
@@ -103,13 +100,32 @@ namespace PayEase_CaseStudy.Controllers
             {
                 throw new Exception("Error creating leave", e);
             }
+        }
+        // GET: api/Leaves/GetLeavesByEmployeeId5
+        [HttpGet("GetLeavesByEmployeeId{employeeId}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IList<LeaveWithEmployeeDTO>>> GetLeavesByEmployeeId(int employeeId)
+        {
+            try
+            {
+                var leaves = await _leave.GetLeavesByEmployeeId(employeeId);
 
+                if (leaves == null || leaves.Count == 0)
+                {
+                    return NotFound("No leaves found for this employee.");
+                }
+
+                return Ok(leaves);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Error retrieving leaves: {e.Message}");
+            }
         }
 
-
-        // DELETE: api/Leaves/5
+        // DELETE: api/Leaves/DeleteLeave5
         [HttpDelete("DeleteLeave{id}")]
-        [Authorize(Roles = "Employee")]
+        [AllowAnonymous]
         public async Task<IActionResult> DeleteLeave(int id)
         {
             try
@@ -126,7 +142,6 @@ namespace PayEase_CaseStudy.Controllers
             {
                 throw new Exception($"Error deleting leave with ID {id}", e);
             }
-
         }
     }
 }

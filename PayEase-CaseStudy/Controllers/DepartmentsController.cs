@@ -24,7 +24,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/Departments
         [HttpGet("GetAllDepartments")]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public async Task<ActionResult<IList<Department>>> GetAllDepartments()
         {
             try
@@ -44,7 +44,7 @@ namespace PayEase_CaseStudy.Controllers
 
         // GET: api/Departments/5
         [HttpGet("GetDepartmentById{id}")]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public async Task<ActionResult<Department>> GetDepartmentById(int id)
         {
             try
@@ -66,31 +66,32 @@ namespace PayEase_CaseStudy.Controllers
 
         // PUT: api/Departments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    
-        
+
+
 
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Department>> AddDepartment(string departmentname)
+        public async Task<ActionResult<Department>> AddDepartment([FromBody] string departmentname)
         {
             try
             {
                 var department = await _department.AddDepartment(departmentname);
                 if (department == null)
                     return BadRequest("Failed to add department.");
+
                 return Ok(department);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new Exception("Error adding department", e);
             }
         }
 
+
         // DELETE: api/Departments/5
         [HttpDelete("DeleteDepartment{id}")]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
             try

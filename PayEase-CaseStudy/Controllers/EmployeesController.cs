@@ -44,30 +44,31 @@ namespace PayEase_CaseStudy.Controllers
         }
 
         // GET: api/Employees/5
-        [HttpGet("GetEmployeeById{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Employee>> GetEmployeeById(int id)
+        [HttpGet("GetEmployeeById")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Employee>> GetEmployeeById([FromQuery] int id)
         {
             try
             {
                 var employee = await _employee.GetEmployeeById(id);
-                if(employee == null)
+                if (employee == null)
                 {
                     return NotFound($"Employee with ID {id} not found.");
                 }
                 return Ok(employee);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception($"Error retrieving employee with ID {id}", ex);
             }
         }
 
+
         // PUT: api/Employees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("UpdateEmployee{id,employee}")]
-        [Authorize(Roles = "Employee")]
-        public async Task<IActionResult> UpdateEmployee(int id, EmployeeUpdateDTO employee)
+        [HttpPut("UpdateEmployee")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UpdateEmployee(int id, [FromBody]EmployeeUpdateDTO employee)
         {
             try
             {
@@ -85,7 +86,7 @@ namespace PayEase_CaseStudy.Controllers
         }
 
         [HttpPut("UpdateEmployeeWithUserId")]
-        [Authorize(Roles ="Employee")]
+        [AllowAnonymous]
         public async Task<IActionResult> UpdateEmployeeWithUserId(string userid,[FromBody]EmployeeUpdateDTO employee)
         {
             try
@@ -123,10 +124,28 @@ namespace PayEase_CaseStudy.Controllers
                 throw new Exception("Error adding employee", ex);
             }
         }
+        [HttpGet("GetEmployeeByUserId")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Employee>> GetEmployeeByUserId(string userId)
+        {
+            try
+            {
+                var employee = await _employee.GetEmployeeByUserId(userId);
+                if (employee == null)
+                {
+                    return NotFound($"No employee found with User ID: {userId}");
+                }
+                return Ok(employee);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving employee by User ID", ex);
+            }
+        }
 
         // DELETE: api/Employees/5
         [HttpDelete("DeleteEmployee{id}")]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public async Task<IActionResult> DeleteEmployee(int id)
         {
             try

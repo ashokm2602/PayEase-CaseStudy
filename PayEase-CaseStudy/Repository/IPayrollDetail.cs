@@ -12,5 +12,9 @@ namespace PayEase_CaseStudy.Repository
         public Task<PayrollDetail> AddPayrollDetail(PayrollDetailDTO payrollDetail);
         public Task<PayrollDetail> UpdatePayrollDetail(int id, PayrollDetailDTO payrollDetail);
         public Task DeletePayrollDetail(int id);
+
+        Task<PayrollDetail> GetLatestPayrollDetailByEmployee(int empId);
+
+
     }
 }

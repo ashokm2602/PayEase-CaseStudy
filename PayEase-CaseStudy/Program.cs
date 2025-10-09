@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using System.Text;
+﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,26 +14,23 @@ var builder = WebApplication.CreateBuilder(args);
 // -------------------- CONNECTION STRING --------------------
 var connectionString = builder.Configuration.GetConnectionString("defaultconnection");
 
-// -------------------- DBCONTEXTS --------------------
-// Identity DbContext
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
-
-// App DbContext
+// -------------------- DBCONTEXT --------------------
 builder.Services.AddDbContext<PayDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString,
+        sqlOptions => sqlOptions.CommandTimeout(60)) // 60 seconds
+);
+
 
 // -------------------- IDENTITY --------------------
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddEntityFrameworkStores<PayDbContext>()
     .AddDefaultTokenProviders();
 
-// -------------------- JWT AUTHENTICATION --------------------
+// -------------------- JWT AUTH --------------------
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
@@ -44,8 +40,8 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:Audience"],
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
     };
@@ -80,13 +76,21 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// -------------------- CORS --------------------
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
+
 // -------------------- REPOSITORIES & SERVICES --------------------
 builder.Services.AddScoped<IUser, UserRepo>();
 builder.Services.AddScoped<IEmployee, EmployeeRepo>();
 builder.Services.AddScoped<IDepartment, DepartmentRepo>();
 builder.Services.AddScoped<IPayroll, PayrollRepo>();
 builder.Services.AddScoped<IPayrollDetail, PayrollDetailRepo>();
-builder.Services.AddScoped<IAuditLog, AuditLogRepo>();
 builder.Services.AddScoped<ICompensation, CompensationRepo>();
 builder.Services.AddScoped<ILeave, LeaveRepo>();
 builder.Services.AddHttpContextAccessor();
@@ -98,12 +102,13 @@ builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
+app.UseCors("AllowAll");
+
 // -------------------- SEED DEFAULT USER --------------------
 using (var scope = app.Services.CreateScope())
 {
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-    // Check if the user exists
     var existingUser = await userManager.FindByNameAsync("testuser");
     if (existingUser == null)
     {
@@ -113,11 +118,9 @@ using (var scope = app.Services.CreateScope())
             Email = "test@mail.com"
         };
 
-        // Create the user with a proper password
-        await userManager.CreateAsync(user, "Test@123"); // password will be hashed
+        await userManager.CreateAsync(user, "Test@123");
     }
 }
-
 
 // -------------------- MIDDLEWARE --------------------
 if (app.Environment.IsDevelopment())

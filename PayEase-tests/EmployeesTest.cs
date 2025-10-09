@@ -22,17 +22,16 @@ namespace PayEase_CaseStudy.Tests
         public void Setup()
         {
             var options = new DbContextOptionsBuilder<PayDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString()) 
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
-            var fakeUserService = new FakeCurrentUserService("TestUser");
 
             _context = new PayDbContext(options);
-             
 
 
-        _context.Database.EnsureCreated();
 
-            _context.Add(new ApplicationUser {UserName = "admin", Email = "admin@mail.com", PasswordHash = "pass" });
+            _context.Database.EnsureCreated();
+
+            _context.Add(new ApplicationUser { UserName = "admin", Email = "admin@mail.com", PasswordHash = "pass" });
             _context.Departments.Add(new Department { DeptId = 1, DeptName = "HR" });
             _context.SaveChanges();
 
@@ -95,7 +94,7 @@ namespace PayEase_CaseStudy.Tests
         public async Task UpdateEmployee_Should_Update_Employee_Details()
         {
             var emp = await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = " ", FirstName = "David", LastName = "White", DOB = DateTime.Today.AddYears(-32), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "444444", Address = "Addr4" });
-            var updated = await _employeeRepo.UpdateEmployee(emp.EmpId, new EmployeeUpdateDTO { FirstName = "DavidUpdated", LastName = "White", DOB = emp.DOB, ContactNumber = "555555", Address = "New Addr"});
+            var updated = await _employeeRepo.UpdateEmployee(emp.EmpId, new EmployeeUpdateDTO { FirstName = "DavidUpdated", LastName = "White", DOB = emp.DOB, ContactNumber = "555555", Address = "New Addr" });
 
             Assert.That(updated.FirstName, Is.EqualTo("DavidUpdated"));
             Assert.That(updated.BaseSalary, Is.EqualTo(55000));
@@ -104,7 +103,7 @@ namespace PayEase_CaseStudy.Tests
         [Test]
         public async Task DeleteEmployee_Should_Remove_Employee_From_Db()
         {
-            var emp = await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = " ", FirstName = "Eve", LastName = "Black", DOB = DateTime.Today.AddYears(-29), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "666666", Address = "Addr5"});
+            var emp = await _employeeRepo.AddEmployee(new EmployeeDTO { UserId = " ", FirstName = "Eve", LastName = "Black", DOB = DateTime.Today.AddYears(-29), HireDate = DateTime.Today, DeptId = 1, ContactNumber = "666666", Address = "Addr5" });
 
             await _employeeRepo.DeleteEmployee(emp.EmpId);
 

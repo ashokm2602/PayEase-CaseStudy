@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace PayEase_CaseStudy.Tests
 {
     [TestFixture]
-    public class UserRepoTests
+    public class UsersTest
     {
         private Mock<UserManager<ApplicationUser>> _userManagerMock;
         private UserRepo _userRepo;

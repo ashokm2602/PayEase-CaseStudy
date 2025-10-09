@@ -1,58 +1,64 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PayEase_CaseStudy.Services;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using PayEase_CaseStudy.Authentication;
 
 namespace PayEase_CaseStudy.Models
 {
-    public class PayDbContext : DbContext
+    public class PayDbContext : IdentityDbContext<ApplicationUser>
     {
-
         public PayDbContext(DbContextOptions<PayDbContext> options)
             : base(options)
         {
         }
 
-        
-
-        public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
         public DbSet<Payroll> Payrolls { get; set; }
         public DbSet<PayrollDetail> PayrollDetails { get; set; }
-        public DbSet<Leave> Leaves { get; set; }
         public DbSet<CompensationAdjustment> CompensationAdjustments { get; set; }
-        public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<Leave> Leaves { get; set; }
 
-        
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public DbSet<RefreshToken> RefreshTokens { get; set; }  
+
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder); // This creates all Identity tables
 
-            modelBuilder.Entity<Department>()
-                .HasMany(d => d.Employees)
-                .WithOne(e => e.Department)
+            // Fluent API configurations (if needed)
+            builder.Entity<Department>().HasKey(d => d.DeptId);
+            builder.Entity<Employee>()
+                .HasOne<ApplicationUser>()
+                .WithMany()
+                .HasForeignKey(e => e.ApplicationUserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Employee>()
+                .HasOne(d => d.Department)
+                .WithMany()
                 .HasForeignKey(e => e.DeptId);
 
-            modelBuilder.Entity<Employee>()
-                .HasMany(e => e.PayrollDetails)
-                .WithOne(pd => pd.Employee)
-                .HasForeignKey(pd => pd.EmpId);
+            builder.Entity<CompensationAdjustment>()
+                .HasOne(e => e.Employee)
+                .WithMany()
+                .HasForeignKey(c => c.EmpId);
 
-            modelBuilder.Entity<Employee>()
-                .HasMany(e => e.Leaves)
-                .WithOne(l => l.Employee)
+            builder.Entity<Leave>()
+                .HasOne(e => e.Employee)
+                .WithMany()
                 .HasForeignKey(l => l.EmpId);
 
-            modelBuilder.Entity<Employee>()
-                .HasMany(e => e.CompensationAdjustments)
-                .WithOne(ca => ca.Employee)
-                .HasForeignKey(ca => ca.EmpId);
+            builder.Entity<PayrollDetail>()
+                .HasOne(e => e.Employee)
+                .WithMany()
+                .HasForeignKey(p => p.EmpId);
 
-            modelBuilder.Entity<Payroll>()
-                .HasMany(p => p.PayrollDetails)
-                .WithOne(pd => pd.Payroll)
-                .HasForeignKey(pd => pd.PayrollId);
+            builder.Entity<PayrollDetail>()
+                .HasOne(p => p.Payroll)
+                .WithMany()
+                .HasForeignKey(p => p.PayrollId);
+
+           
         }
     }
 }

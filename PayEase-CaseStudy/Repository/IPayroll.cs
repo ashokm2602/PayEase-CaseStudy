@@ -10,5 +10,6 @@ namespace PayEase_CaseStudy.Repository
         public Task<Payroll> AddPayroll(PayrollDTO payroll);
         public Task<Payroll> UpdatePayroll(int id, PayrollDTO payroll);
         public Task DeletePayroll(int id);
+
     }
 }

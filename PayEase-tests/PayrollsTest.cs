@@ -22,7 +22,6 @@ namespace PayEase_CaseStudy.Tests
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
-            var fakeUserService = new FakeCurrentUserService("TestUser");
 
             _context = new PayDbContext(options); _context.Database.EnsureCreated();
 
